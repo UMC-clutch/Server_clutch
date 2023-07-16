@@ -58,7 +58,8 @@ jobs:
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
         docker build -t app -f DockerFile .
         docker tag app ${{ secrets.DOCKER_USERNAME }}/clutchserver:latest
-        docker push ${{ secrets.DOCKER_USERNAME }}/clutchserver:latest  
+        docker push ${{ secrets.DOCKER_USERNAME }}/clutchserver:latest
+
         
     - name: Deploy
       uses: appleboy/ssh-action@master
