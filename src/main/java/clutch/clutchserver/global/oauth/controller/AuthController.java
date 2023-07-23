@@ -53,10 +53,11 @@ public class AuthController {
 
 
 
-    @GetMapping(value = "/api/test")
+    @GetMapping(value = "/test")
     @SecurityRequirement(name = "access-token")
     public String test() throws Exception{
 
         return "Hello Success";
     }
+
 }
