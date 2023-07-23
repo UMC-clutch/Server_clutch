@@ -12,15 +12,10 @@ import java.util.ArrayList;
 public class CorsConfig  implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        ArrayList<String> allowedOriginPatterns = new ArrayList<>();
-        allowedOriginPatterns.add("http://localhost:3000");
-        allowedOriginPatterns.add("http://localhost:8080");
-
-        String[] patterns = allowedOriginPatterns.toArray(String[]::new);
         registry.addMapping("/**")
+                .allowedOrigins("*")
                 .allowedMethods("*")
-                .allowedOriginPatterns(patterns)
-                .allowCredentials(true)
-                .maxAge(3600L);
+                .allowCredentials(false)
+                .maxAge(3000);
     }
 }
