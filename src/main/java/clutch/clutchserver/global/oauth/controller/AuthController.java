@@ -59,5 +59,9 @@ public class AuthController {
 
         return "Hello Success";
     }
+    @GetMapping(value = "/success")
+    public String success() throws Exception{
+        return "Success";
+    }
 
 }
