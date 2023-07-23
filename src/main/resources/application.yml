@@ -1,10 +1,20 @@
 #common
+server:
+  servlet:
+    context-path: /api
+  forward-headers-strategy: framework
+
 spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+#    username: ${DB_USER}
+#    password: ${DB_PASSWORD}
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: jdbc:mysql://localhost:3306/loginpractice
+    username: root
+    password: Sayhello67!@
 
   token:
     secret: ${JWT_SECRET}
@@ -13,7 +23,7 @@ spring:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create #update인데 로컬에서 할 때는 create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect

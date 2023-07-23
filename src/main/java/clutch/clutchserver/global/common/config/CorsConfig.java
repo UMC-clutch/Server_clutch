@@ -1,4 +1,4 @@
-package clutch.clutchserver.global.common;
+package clutch.clutchserver.global.common.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
