@@ -41,10 +41,6 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
-                .requestMatchers("/",
-                        "/error",
-                        "/favicon.ico",
-                        "/h2-console/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/swagger-ui/index.html/**").permitAll()
                 .requestMatchers("/api/v1/**").authenticated();

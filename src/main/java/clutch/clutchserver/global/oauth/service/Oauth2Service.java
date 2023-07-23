@@ -4,7 +4,6 @@ import clutch.clutchserver.global.common.enums.AuthProvider;
 import clutch.clutchserver.global.common.enums.Role;
 import clutch.clutchserver.user.entity.User;
 import clutch.clutchserver.user.repository.UserRepository;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
