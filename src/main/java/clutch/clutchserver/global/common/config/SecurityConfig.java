@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .disable()
 
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.NEVER);
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
                 .requestMatchers("/",
