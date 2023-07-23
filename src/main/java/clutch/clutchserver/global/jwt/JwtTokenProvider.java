@@ -93,7 +93,7 @@ public class JwtTokenProvider {
                 .user(kakaoInfo)
                 .build();
 
-        System.out.println(token.getAccessToken());
+        //System.out.println(token.getAccessToken());
 
         tokenRepository.save(token);
 

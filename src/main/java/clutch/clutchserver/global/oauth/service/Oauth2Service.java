@@ -39,7 +39,7 @@ public class Oauth2Service {
         String token = accessTokenJson.substring(accessTokenJson.indexOf(":\"") + 2, accessTokenJson.lastIndexOf("\""));
 
         // 추출한 액세스 토큰 출력
-        System.out.println(token);
+        //System.out.println(token);
 
         String url = "https://kapi.kakao.com/v2/user/me";
         Request.Builder builder = new Request.Builder()
@@ -47,14 +47,14 @@ public class Oauth2Service {
                 .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8")
                 .url(url);
         Request request = builder.build();
-        System.out.println(request);
+        //System.out.println(request);
 
         Response responseHTML = client.newCall(request).execute();
 
         net.minidev.json.parser.JSONParser parser = new JSONParser();
         net.minidev.json.JSONObject info =(net.minidev.json.JSONObject) parser.parse(responseHTML.body().string());
 
-        System.out.println(accessToken);
+        //System.out.println(accessToken);
 
 
         // email 값과 profile의 nickname 값을 추출
@@ -97,7 +97,7 @@ public class Oauth2Service {
         Response responseHTML = client.newCall(request).execute();
         JSONParser parser = new JSONParser();
         JSONObject obj = (JSONObject) parser.parse(responseHTML.body().string());
-        System.out.println(responseHTML);
+        //System.out.println(responseHTML);
 
         JSONObject response = new JSONObject();
 
