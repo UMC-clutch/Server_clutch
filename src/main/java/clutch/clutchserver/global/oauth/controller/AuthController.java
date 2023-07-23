@@ -36,19 +36,19 @@ public class AuthController {
     }
 
     //이부분은 개발할때 accesstoken얻기 위한 로직들!
-//    @Operation(description = "스프링용 카카오로그인 실행(code받아오기)")
-//    @GetMapping("/api/auth/test1")
-//    public String kakaoLogin() {
-//        return "https://kauth.kakao.com/oauth/authorize?client_id=" + KAKAO_ID +
-//                "&redirect_uri=http://localhost:8080/api/auth/token/kakao&response_type=code";
-//    }
+    @Operation(description = "스프링용 카카오로그인 실행(code받아오기)")
+    @GetMapping("/api/auth/test1")
+    public String kakaoLogin() {
+        return "https://kauth.kakao.com/oauth/authorize?client_id=" + KAKAO_ID +
+                "&redirect_uri=http://localhost:8080/api/auth/token/kakao&response_type=code";
+    }
 
-//    @Operation(description= "스프링용 카카오 액세스토큰 추출로직")
-//    @GetMapping(value = "/api/auth/token/kakao")
-//    public JSONObject oauthKakao(@RequestParam(value = "code", required = false) String code) throws Exception {
-//        log.warn("인가코드 = {}",code);
-//        return oAuth2Service.getKakaoAccessToken("http://localhost:8080/api/auth/token/kakao", code);
-//    }
+    @Operation(description= "스프링용 카카오 액세스토큰 추출로직")
+    @GetMapping(value = "/api/auth/token/kakao")
+    public JSONObject oauthKakao(@RequestParam(value = "code", required = false) String code) throws Exception {
+        log.warn("인가코드 = {}",code);
+        return oAuth2Service.getKakaoAccessToken("http://localhost:8080/api/auth/token/kakao", code);
+    }
 
 
 

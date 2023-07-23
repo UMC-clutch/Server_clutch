@@ -31,6 +31,12 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
+    - name: Set up NTP
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ntp
+        sudo service ntp start
+
 
     - name: Make env
       run: |
