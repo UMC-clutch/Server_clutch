@@ -1,13 +1,16 @@
 package clutch.clutchserver.global.jwt;
 
 import clutch.clutchserver.global.common.ExpireTime;
+import clutch.clutchserver.global.oauth.service.CustomUserDetailsService;
 import clutch.clutchserver.token.entity.Token;
 import clutch.clutchserver.token.repository.TokenRepository;
 import clutch.clutchserver.user.dto.UserResponseDto;
 import clutch.clutchserver.user.entity.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,11 +22,13 @@ import org.springframework.util.StringUtils;
 import io.jsonwebtoken.io.Decoders;
 
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
@@ -33,16 +38,25 @@ public class JwtTokenProvider {
     private static final String TYPE_REFRESH = "refresh";
 
 
-    private final Key key;
+    //private final Key key;
     private final TokenRepository tokenRepository;
-    private final UserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
 
-    public JwtTokenProvider(@Value("${spring.token.secret}") String secretKey, TokenRepository tokenRepository, UserDetailsService userDetailsService) {
-        this.tokenRepository = tokenRepository;
-        this.userDetailsService = userDetailsService;
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        this.key = Keys.hmacShaKeyFor(keyBytes);
+    @Value("${spring.token.secret}")
+    private String key;
+
+
+    @PostConstruct
+    protected void init() {
+        key = Base64.getEncoder().encodeToString(key.getBytes());
     }
+
+//    public JwtTokenProvider(@Value("${spring.token.secret}") String secretKey, TokenRepository tokenRepository, UserDetailsService userDetailsService) {
+//        this.tokenRepository = tokenRepository;
+//        this.userDetailsService = (CustomUserDetailsService) userDetailsService;
+//        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+//        this.key = Keys.hmacShaKeyFor(keyBytes);
+//    }
 
 
     // Kakao OAuth2 토큰 생성
