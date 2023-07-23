@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 public class SwaggerConfig {
     @Bean
     public OpenAPI getOpenApi() {
-        Server server = new Server().url("/api");
+        Server server = new Server().url("/");
 
         return new OpenAPI()
                 .info(getSwaggerInfo())
