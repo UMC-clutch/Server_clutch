@@ -45,7 +45,7 @@ public class SecurityConfig {
                         "/favicon.ico",
                         "/h2-console/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/swagger-ui/**").permitAll()
+                .requestMatchers("/api/success").permitAll()
                 .requestMatchers("/api/**").authenticated();
 
         http.logout()
