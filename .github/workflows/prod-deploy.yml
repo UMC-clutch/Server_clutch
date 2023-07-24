@@ -38,14 +38,12 @@ jobs:
         sudo service ntp start
 
 
-    - name: Make env
+    - name: make application-db.properties
       run: |
-          touch ./.env
-          echo "$ENV_DEV" > ./.env
-        # Make env file
-      env:
-          ENV_DEV: ${{ secrets.ENV_PROD }}
-      ## create application-prod.properties
+          cd ./src/main/resources
+          touch ./application-db.yml
+          echo "${{ secrets.DB_PROPERTIES }}" > ./application-db.properties
+      shell: bash
     - name: make application-prod.yml
       if: contains(github.ref, 'main') # branch가 main 일 때, 나머지는 위와 동일
       run: |
@@ -78,6 +76,6 @@ jobs:
         script: |
           docker pull ${{ secrets.DOCKER_USERNAME }}/clutchserver:latest
           docker stop $(docker ps -a -q)
-          docker run -d --log-driver=syslog -p 8080:8080 --env-file ./.env ${{ secrets.DOCKER_USERNAME }}/clutchserver:latest
+          docker run -d --log-driver=syslog -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/clutchserver:latest
           docker rm $(docker ps --filter 'status=exited' -a -q)
           docker image prune -a -f
