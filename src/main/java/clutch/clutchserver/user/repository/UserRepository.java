@@ -1,6 +1,7 @@
-package clutch.clutchserver.global.user.repository;
+package clutch.clutchserver.user.repository;
 
-import clutch.clutchserver.global.user.entity.User;
+
+import clutch.clutchserver.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

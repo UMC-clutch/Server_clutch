@@ -1,7 +1,6 @@
-package clutch.clutchserver.global.common.jwt;
+package clutch.clutchserver.global.jwt;
 
 import clutch.clutchserver.global.common.ExpireTime;
-import clutch.clutchserver.global.oauth.service.CustomUserDetailsService;
 import clutch.clutchserver.token.entity.Token;
 import clutch.clutchserver.token.repository.TokenRepository;
 import clutch.clutchserver.user.dto.UserResponseDto;
@@ -36,7 +35,7 @@ public class JwtTokenProvider {
 
     private final Key key;
     private final TokenRepository tokenRepository;
-    private final CustomUserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     public JwtTokenProvider(@Value("${spring.token.secret}") String secretKey, TokenRepository tokenRepository, UserDetailsService userDetailsService) {
         this.tokenRepository = tokenRepository;

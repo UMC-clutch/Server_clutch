@@ -1,4 +1,4 @@
-package clutch.clutchserver.global.common.jwt;
+package clutch.clutchserver.global.jwt;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;

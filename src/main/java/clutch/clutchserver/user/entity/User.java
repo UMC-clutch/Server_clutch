@@ -1,6 +1,7 @@
-package clutch.clutchserver.global.user.entity;
+package clutch.clutchserver.user.entity;
 
 import clutch.clutchserver.global.common.BaseDateEntity;
+import clutch.clutchserver.global.common.enums.AuthProvider;
 import clutch.clutchserver.global.common.enums.Role;
 import io.micrometer.common.lang.Nullable;
 import jakarta.persistence.*;
@@ -27,7 +28,11 @@ public class User extends BaseDateEntity {
 
 
     @Enumerated(EnumType.STRING)
+    private AuthProvider authProvider;
+
+    @Enumerated(EnumType.STRING)
     private Role role;
+
 
 
     @Nullable

@@ -1,5 +1,7 @@
 package clutch.clutchserver.global.common.config;
 
+import clutch.clutchserver.global.jwt.JwtAuthenticationFilter;
+import clutch.clutchserver.global.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,6 +9,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
@@ -17,6 +20,8 @@ import org.springframework.security.web.SecurityFilterChain;
         prePostEnabled = true
 )
 public class SecurityConfig {
+
+    private final JwtTokenProvider jwtTokenProvider;
 
 
     @Bean
@@ -38,7 +43,15 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
-                .anyRequest().permitAll();
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/v1/**").authenticated();
+
+        http.logout()
+                .logoutUrl("/logout")
+                .clearAuthentication(true);
+
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+
 
 
 
