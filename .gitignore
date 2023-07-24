@@ -39,4 +39,4 @@ out/
 ### env ###
 .env*
 
-**/application-local.properties
+**/application-local.yml
