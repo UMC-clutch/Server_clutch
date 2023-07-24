@@ -4,6 +4,12 @@ ARG JAR_FILE=./build/libs/*.jar
 
 EXPOSE 8080
 
+# .env 파일을 이미지로 복사
+COPY ./.env /app/.env
+
+# .env 파일의 내용을 읽어서 환경 변수로 설정
+RUN set -o allexport; source /app/.env; set +o allexport
+
 COPY ${JAR_FILE} app.jar
 
 ENTRYPOINT ["java","-jar","-Dspring.profiles.active=prod", "/app.jar"]
