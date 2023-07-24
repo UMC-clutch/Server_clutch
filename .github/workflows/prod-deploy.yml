@@ -54,9 +54,6 @@ jobs:
           echo "${{ secrets.PROPERTIES_PROD }}" > ./application.yml
       shell: bash
 
-    - name: Copy .env file to EC2 instance
-      run: |
-        scp -i ${{ secrets.PRIVATE_KEY }} ./.env ubuntu@${{ secrets.HOST_PROD }}:/home/ubuntu/clutchserver/.env      
       
     - name: Grant execute permission for gradlew
       run: chmod +x ./gradlew
@@ -66,7 +63,7 @@ jobs:
     - name: Docker build
       run: |
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker build -t app -f DockerFile .
+        docker build -t app -f DockerFile --env-file ./.env .
         docker tag app ${{ secrets.DOCKER_USERNAME }}/clutchserver:latest
         docker push ${{ secrets.DOCKER_USERNAME }}/clutchserver:latest
 
@@ -81,6 +78,6 @@ jobs:
         script: |
           docker pull ${{ secrets.DOCKER_USERNAME }}/clutchserver:latest
           docker stop $(docker ps -a -q)
-          docker run -d --log-driver=syslog -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/clutchserver:latest
+          docker run -d --log-driver=syslog -p 8080:8080 --env-file ./.env ${{ secrets.DOCKER_USERNAME }}/clutchserver:latest
           docker rm $(docker ps --filter 'status=exited' -a -q)
           docker image prune -a -f
