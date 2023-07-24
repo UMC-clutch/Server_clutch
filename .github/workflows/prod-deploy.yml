@@ -44,14 +44,13 @@ jobs:
           touch ./application-db.yml
           echo "${{ secrets.DB_PROPERTIES }}" > ./application-db.yml
       shell: bash
-    - name: make application-prod.yml
-      if: contains(github.ref, 'main') # branch가 main 일 때, 나머지는 위와 동일
-      run: |
-          cd ./src/main/resources
-          touch ./application.yml
-          echo "${{ secrets.PROPERTIES_PROD }}" > ./application.yml
-      shell: bash
 
+    - name: make application-real.yml
+      run: |
+        cd ./src/main/resources
+        touch ./application-real.yml
+        echo "${{ secrets.PROPERTIES_PROD }}" > ./application-real.yml
+      shell: bash
       
     - name: Grant execute permission for gradlew
       run: chmod +x ./gradlew
