@@ -38,11 +38,11 @@ jobs:
         sudo service ntp start
 
 
-    - name: make application-db.properties
+    - name: make application-db.yml
       run: |
           cd ./src/main/resources
           touch ./application-db.yml
-          echo "${{ secrets.DB_PROPERTIES }}" > ./application-db.properties
+          echo "${{ secrets.DB_PROPERTIES }}" > ./application-db.yml
       shell: bash
     - name: make application-prod.yml
       if: contains(github.ref, 'main') # branch가 main 일 때, 나머지는 위와 동일
