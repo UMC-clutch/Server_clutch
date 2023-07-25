@@ -19,21 +19,17 @@ public class User extends BaseDateEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     private String email;
 
     private String name;
 
     private String oauth2Id;
 
-
     @Enumerated(EnumType.STRING)
     private AuthProvider authProvider;
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-
 
     @Nullable
     private String phoneNumber;
