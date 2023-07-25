@@ -33,8 +33,6 @@ public class User extends BaseDateEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-
-
     @Nullable
     private String phoneNumber;
 

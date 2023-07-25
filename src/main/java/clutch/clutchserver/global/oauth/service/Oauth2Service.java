@@ -17,6 +17,7 @@ import okhttp3.Response;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Optional;
 
 
 @Slf4j
@@ -62,6 +63,13 @@ public class Oauth2Service {
         net.minidev.json.JSONObject profile = (JSONObject) kakaoAccount.get("profile");
         String nickname = (String) profile.get("nickname");
         String email = (String) kakaoAccount.get("email");
+
+        // 이미 존재하는 이메일인지 확인
+        Optional<User> existingUser = userRepository.findByEmail(email);
+        System.out.println(existingUser);
+        if (existingUser.isPresent()) {
+            throw new RuntimeException("User with this email already exists!");
+        }
 
         // User 생성
         User user = User.builder()
