@@ -1,8 +1,6 @@
 package clutch.clutchserver.address.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Builder
@@ -11,11 +9,13 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "address")
 public class Address {
 
     //주소 id
     @Id
     @GeneratedValue
+    @Column(name = "address_id")
     private Long addressId;
 
     //주소
