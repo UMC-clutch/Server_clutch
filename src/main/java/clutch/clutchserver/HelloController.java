@@ -23,25 +23,13 @@ public class HelloController {
     }
 
     //유저 조회
-    @GetMapping
+    @GetMapping("/api/users")
     @SecurityRequirement(name = "access-token")
     public ResponseEntity<?> findUser() {
+        // 현재 토큰을 사용중인 유저 조회
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String useremail = authentication.getName();
+        String useremail = authentication.getName();    // 해당 유저의 email 조회(getName()은 이메일 조회 의미)
 
         return userService.findUser(useremail);
     }
-
-//    @GetMapping(value = "/api/v1/test")
-//    @SecurityRequirement(name = "access-token")
-//    public String test(HttpServletRequest request) throws Exception{
-//        // 인증된 사용자의 정보 가져오기
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String username = authentication.getName();
-//
-//        // 인증된 사용자의 정보를 기반으로 추가적인 작업 수행 가능
-//        // (예: 사용자 정보를 활용한 비즈니스 로직 등)
-//
-//        return "Hello " + username + "! Success";
-//    }
 }
