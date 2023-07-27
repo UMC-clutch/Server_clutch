@@ -54,41 +54,56 @@ public class JwtTokenProvider {
         claims.put("name", kakaoInfo.getName());
 
         long now = System.currentTimeMillis();
-        long expirationTime = now + ExpireTime.ACCESS_TOKEN_EXPIRE_TIME;
+        long accessTokenExpirationTime = now + ExpireTime.ACCESS_TOKEN_EXPIRE_TIME;
+        long refreshTokenExpirationTime = now + ExpireTime.REFRESH_TOKEN_EXPIRE_TIME;
 
-        String accessToken = Jwts.builder()
+        Token tokens = tokenRepository.findByUserId(kakaoInfo.getId()).orElse(null);
+        String accessToken, refreshToken;
+
+        accessToken = Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(now))
                 .claim("type", TYPE_ACCESS)
-                .setExpiration(new Date(expirationTime))
+                .setExpiration(new Date(accessTokenExpirationTime))
                 .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
-        String refreshToken = Jwts.builder()
+        refreshToken = Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(now))
                 .claim("type", TYPE_REFRESH)
-                .setExpiration(new Date(expirationTime))
+                .setExpiration(new Date(refreshTokenExpirationTime))
                 .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
+        if (tokens != null) {
+            // 이미 가입된 사용자인 경우, 기존의 토큰을 업데이트합니다.
 
-        Token token = Token.builder()
-                .accessToken(accessToken)
-                .accessTokenExpirationTime(ExpireTime.ACCESS_TOKEN_EXPIRE_TIME)
-                .refreshTokenExpirationTime(ExpireTime.ACCESS_TOKEN_EXPIRE_TIME)
-                .refreshToken(refreshToken)
-                .user(kakaoInfo)
-                .build();
+            tokens.setAccessToken(accessToken);
+            tokens.setAccessTokenExpirationTime(accessTokenExpirationTime);
+            tokens.setRefreshToken(refreshToken);
+            tokens.setRefreshTokenExpirationTime(refreshTokenExpirationTime);
 
-        System.out.println(token.getAccessToken());
+        } else {
+            // 새로운 사용자인 경우, 새로운 토큰을 생성합니다.
 
-        tokenRepository.save(token);
+            tokens = Token.builder()
+                    .accessToken(accessToken)
+                    .accessTokenExpirationTime(accessTokenExpirationTime)
+                    .refreshToken(refreshToken)
+                    .refreshTokenExpirationTime(refreshTokenExpirationTime)
+                    .user(kakaoInfo)
+                    .build();
+
+        }
+
+        // 토큰 저장
+        tokenRepository.save(tokens);
 
         return UserResponseDto.TokenInfo.builder()
                 .grantType(BEARER_TYPE)
                 .accessToken(accessToken)
-                .accessTokenExpirationTime(ExpireTime.ACCESS_TOKEN_EXPIRE_TIME)
+                .accessTokenExpirationTime(accessTokenExpirationTime)
                 .refreshToken(refreshToken)
-                .refreshTokenExpirationTime(ExpireTime.REFRESH_TOKEN_EXPIRE_TIME)
+                .refreshTokenExpirationTime(refreshTokenExpirationTime)
                 .build();
     }
 
