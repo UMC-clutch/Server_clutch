@@ -67,8 +67,9 @@ public class Oauth2Service {
         // 이미 존재하는 이메일인지 확인
         Optional<User> existingUser = userRepository.findByEmail(email);
         System.out.println(existingUser);
+        // 만약 이미 존재하는 사용자인 경우, 해당 사용자 객체를 반환
         if (existingUser.isPresent()) {
-            throw new RuntimeException("User with this email already exists!");
+            return existingUser.get();
         }
 
         // User 생성
