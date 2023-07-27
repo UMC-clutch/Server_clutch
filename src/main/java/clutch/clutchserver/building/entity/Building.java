@@ -1,5 +1,8 @@
 package clutch.clutchserver.building.entity;
 
+import clutch.clutchserver.address.entity.Address;
+import clutch.clutchserver.calculate.entity.Calculate;
+import clutch.clutchserver.contract.entity.Contract;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,15 +23,9 @@ public class Building {
     @Column(name = "building_id")
     private Long buildingId;
 
-//    @OneToOne
-//    @JoinColumn(name = "address_id")
-//    private Address address;
-//
-//    @OneToMany
-//    private Contract contract;
-//
-//    @OneToMany
-//    private Calculate calculate;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id")
+    private Address address;
 
     //건물명
     private String name;
