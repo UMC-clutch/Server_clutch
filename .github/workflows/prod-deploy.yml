@@ -11,9 +11,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 permissions:
   contents: read
@@ -31,21 +28,25 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-
-    - name: Make env
+    - name: Set up NTP
       run: |
-          touch ./.env
-          echo "$ENV_DEV" > ./.env
-        # Make env file
-      env:
-          ENV_DEV: ${{ secrets.ENV_PROD }}
-      ## create application-prod.properties
-    - name: make application-prod.yml
-      if: contains(github.ref, 'main') # branch가 main 일 때, 나머지는 위와 동일
+        sudo apt-get update
+        sudo apt-get install -y ntp
+        sudo service ntp start
+
+
+    - name: make application-db.yml
       run: |
           cd ./src/main/resources
-          touch ./application.yml
-          echo "${{ secrets.PROPERTIES_PROD }}" > ./application.yml
+          touch ./application-db.yml
+          echo "${{ secrets.DB_PROPERTIES }}" > ./application-db.yml
+      shell: bash
+
+    - name: make application-real.yml
+      run: |
+        cd ./src/main/resources
+        touch ./application-real.yml
+        echo "${{ secrets.PROPERTIES_PROD }}" > ./application-real.yml
       shell: bash
       
     - name: Grant execute permission for gradlew

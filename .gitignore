@@ -38,3 +38,8 @@ out/
 
 ### env ###
 .env*
+
+### git ###
+.DS_Store
+
+**/application-local.yml
