@@ -21,6 +21,6 @@ public class Token {
     private String refreshToken;
     private Long refreshTokenExpirationTime;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private User user;
 }

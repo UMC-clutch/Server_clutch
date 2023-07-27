@@ -1,5 +1,6 @@
 package clutch.clutchserver.report.entity;
 
+import clutch.clutchserver.contract.entity.Contract;
 import clutch.clutchserver.global.common.BaseDateEntity;
 import clutch.clutchserver.global.common.enums.ReportStatus;
 import jakarta.persistence.*;
@@ -16,9 +17,9 @@ public class Report extends BaseDateEntity {
     private Long id;
 
 // 연관관계 매핑
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "contract_id")
-//    private Contract contract;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contract_id")
+    private Contract contract;
 
     // 신고 상태 (완료, 심사 중)
     @Enumerated(EnumType.STRING)

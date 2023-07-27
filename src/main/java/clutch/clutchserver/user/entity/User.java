@@ -33,6 +33,4 @@ public class User extends BaseDateEntity {
 
     @Nullable
     private String phoneNumber;
-
-
 }
