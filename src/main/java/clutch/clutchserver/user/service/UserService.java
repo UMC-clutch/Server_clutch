@@ -1,11 +1,15 @@
 package clutch.clutchserver.user.service;
 
 import clutch.clutchserver.global.DefaultAssert;
+import clutch.clutchserver.global.common.enums.Reason;
 import clutch.clutchserver.global.payload.ApiResponse;
+import clutch.clutchserver.token.entity.Token;
+import clutch.clutchserver.token.repository.TokenRepository;
 import clutch.clutchserver.user.dto.UserRes;
 import clutch.clutchserver.user.entity.User;
 import clutch.clutchserver.user.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import clutch.clutchserver.withdrawal.entity.Withdrawal;
+import clutch.clutchserver.withdrawal.repository.WithdrawalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +22,9 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserService {
 
-
     private final UserRepository userRepository;
+    private final WithdrawalRepository withdrawalRepository;
+    private final TokenRepository tokenRepository;
 
     //유저 조회 (조회 기준 - 유저 email)
     public ResponseEntity<?> findUser(String useremail) {
@@ -40,6 +45,26 @@ public class UserService {
                 .build();
 
         return ResponseEntity.ok(apiResponse);
+    }
+
+    // 유저 탈퇴
+    @Transactional
+    public void userDelete(String useremail, Reason reason) {
+
+        // user 삭제
+        Optional<User> user = userRepository.findByEmail(useremail);
+        DefaultAssert.isTrue(user.isPresent(), "유저가 올바르지 않습니다.");
+        userRepository.delete(user.get());
+
+        // user의 토큰 삭제
+        Optional<Token> token = tokenRepository.findByUserId(user.get().getId());
+        DefaultAssert.isTrue(token.isPresent(), "유저가 올바르지 않습니다.");
+        tokenRepository.delete(token.get());
+
+        // 탈퇴 사유 등록
+        Withdrawal withdrawal = new Withdrawal();
+        withdrawal.setReason(reason);
+        withdrawalRepository.save(withdrawal);
     }
 
 }
