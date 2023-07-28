@@ -1,5 +1,7 @@
 package clutch.clutchserver;
 
+import clutch.clutchserver.building.entity.Building;
+import clutch.clutchserver.global.common.enums.Type;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;

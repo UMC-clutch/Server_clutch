@@ -1,28 +1,17 @@
-package clutch.clutchserver.building.entity;
+package clutch.clutchserver.building.dto;
 
-import clutch.clutchserver.address.entity.Address;
 import clutch.clutchserver.global.common.enums.LogicType;
 import clutch.clutchserver.global.common.enums.Type;
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Entity
 @Getter
 @Setter
-@Table(name = "building")
-public class Building {
+public class BuildingInfoDto {
 
     //건물 id
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "building_id")
     private Long buildingId;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id")
-    private Address address;
 
     //건물명
     private String buildingName;
