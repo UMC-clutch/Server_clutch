@@ -130,8 +130,8 @@ public class BuildingService {
         building.setAddress(address);
 
         //입력받은 건물, 주소 DB에 저장.
-        buildingRepository.save(building.getBuildingId());
-        addressRepository.save(address.getAddressId());
+        buildingRepository.save(building);
+        addressRepository.save(address);
     }
 
 }

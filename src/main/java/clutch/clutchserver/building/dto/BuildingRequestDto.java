@@ -29,7 +29,7 @@ public class BuildingRequestDto {
     private int deposit;
 
     //근저당 설정 기준일
-    private LocalDateTime collateralDate;
+    private String collateralDate;
 
     //접수 유형(속성)
     private LogicType logicType;
