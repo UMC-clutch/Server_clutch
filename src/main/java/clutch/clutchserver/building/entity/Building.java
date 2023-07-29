@@ -1,25 +1,24 @@
 package clutch.clutchserver.building.entity;
 
 import clutch.clutchserver.address.entity.Address;
-import clutch.clutchserver.calculate.entity.Calculate;
-import clutch.clutchserver.contract.entity.Contract;
+import clutch.clutchserver.global.common.enums.LogicType;
+import clutch.clutchserver.global.common.enums.Type;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Null;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Builder
+@Entity
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
 @Table(name = "building")
 public class Building {
 
     //건물 id
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "building_id")
     private Long buildingId;
 
@@ -28,18 +27,20 @@ public class Building {
     private Address address;
 
     //건물명
-    private String name;
+    private String buildingName;
 
     //건물 시세
     private int price;
 
     //건물 유형
+    @Enumerated(EnumType.STRING)
     private Type type;
 
     //근저당 설정 기준일
-    private LocalDateTime collateralDate;
+    private String collateralDate;
 
     //접수 유형(속성)
+    @Enumerated(EnumType.STRING)
     private LogicType logicType;
 
     //근저당액
