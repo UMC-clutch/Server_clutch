@@ -1,7 +1,5 @@
 package clutch.clutchserver.report.controller;
 
-import clutch.clutchserver.report.dto.ReportRequestDto;
-import clutch.clutchserver.report.dto.ReportResponseDto;
 import clutch.clutchserver.report.service.ReportService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.codef.api.EasyCodef;

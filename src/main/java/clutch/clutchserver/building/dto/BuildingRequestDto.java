@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class BuildingInfoDto {
+public class BuildingRequestDto {
 
     //건물 id
     private Long buildingId;
@@ -16,11 +16,20 @@ public class BuildingInfoDto {
     //건물명
     private String buildingName;
 
-    //건물 시세
-    private int price;
+    //지번 주소
+    private String address;
+
+    //동
+    private String dong;
+
+    //호
+    private String ho;
 
     //건물 유형
     private Type type;
+
+    //전세금
+    private int deposit;
 
     //근저당 설정 기준일
     private LocalDateTime collateralDate;
