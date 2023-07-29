@@ -2,8 +2,6 @@ package clutch.clutchserver.report.service;
 
 import clutch.clutchserver.building.entity.Building;
 import clutch.clutchserver.building.repository.BuildingRepository;
-import clutch.clutchserver.report.dto.ReportRequestDto;
-import clutch.clutchserver.report.dto.ReportResponseDto;
 import clutch.clutchserver.report.repository.ReportRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.codef.api.EasyCodef;
