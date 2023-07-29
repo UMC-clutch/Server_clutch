@@ -102,12 +102,6 @@ public class BuildingService {
 //                System.out.println("generalPrice = " + generalPrice);
 //                System.out.println("------------------------------");
                 break;
-            } else {
-                building.setPrice((Integer) chosenObject.get("resGeneralPrice"));
-//                System.out.println("------------------------------");
-//                System.out.println("generalPrice = " + generalPrice);
-//                System.out.println("------------------------------");
-                break;
             }
         }
 
