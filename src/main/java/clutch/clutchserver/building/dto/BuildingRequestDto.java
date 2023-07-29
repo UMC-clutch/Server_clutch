@@ -10,9 +10,6 @@ import java.time.LocalDateTime;
 @Setter
 public class BuildingRequestDto {
 
-    //건물 id
-    private Long buildingId;
-
     //건물명
     private String buildingName;
 

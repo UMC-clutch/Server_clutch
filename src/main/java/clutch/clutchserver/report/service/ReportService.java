@@ -1,5 +1,6 @@
 package clutch.clutchserver.report.service;
 
+import clutch.clutchserver.building.dto.BuildingRequestDto;
 import clutch.clutchserver.building.entity.Building;
 import clutch.clutchserver.building.repository.BuildingRepository;
 import clutch.clutchserver.report.repository.ReportRepository;
@@ -25,5 +26,7 @@ public class ReportService {
 
     private final ReportRepository reportRepository;
     private final BuildingRepository buildingRepository;
+
+
 
 }

@@ -33,7 +33,22 @@ public class BuildingService {
     //건물 시세 구하기
     public int getPrice(BuildingRequestDto buildingRequestDto) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException, ParseException {
 
-        Building building = buildingRepository.findByBuildingId(buildingRequestDto.getBuildingId());
+        //빌딩 생성
+        Building building = new Building();
+        Address address = new Address();
+
+        //빌딩 저장.
+        building.setBuildingName(buildingRequestDto.getBuildingName());
+        building.setArea(buildingRequestDto.getArea());
+        building.setType(buildingRequestDto.getType());
+
+        address.setAddress(buildingRequestDto.getAddress());
+        address.setDong(buildingRequestDto.getDong());
+        address.setHo(buildingRequestDto.getHo());
+
+        building.setAddress(address);
+
+
 
         //시세 codef api 이용해서 가져오기
         EasyCodef easyCodef = new EasyCodef();
@@ -45,7 +60,7 @@ public class BuildingService {
         //요청 파라미터 설정(단지 일련번호 조회)
         HashMap<String, Object> parameterMap = new HashMap<String, Object>();
         parameterMap.put("organization", "0004");
-        parameterMap.put("address", building.getAddress());
+        parameterMap.put("address", buildingRequestDto.getAddress());
 
         //단지 일련번호 조회
         String productUrl = "/v1/kr/etc/ld/kb/serial-number";
@@ -59,9 +74,6 @@ public class BuildingService {
         JSONObject jsonCNObject = (JSONObject) jsonParser.parse(result);
         JSONObject jsonCNData = (JSONObject) jsonCNObject.get("data");
         String complexNo = (String) jsonCNData.get("commComplexNo");
-        System.out.println("-------------------------");
-        System.out.println("complexNo = " + complexNo);
-        System.out.println("-------------------------");
 
         //요청 파라미터 설정(시세 정보 조회) -> 필요한 파라미터(기관 코드, 단지 일련번호)
         HashMap<String, Object> parameterMap1 = new HashMap<String, Object>();
@@ -71,7 +83,6 @@ public class BuildingService {
         //시세 정보 조회
         String productUrl1 = "/v1/kr/etc/ld/kb/market-price-information";
         String priceResult = easyCodef.requestProduct(productUrl1, EasyCodefServiceType.DEMO, parameterMap1);
-        System.out.println(priceResult);
 
         //다건의 경우이고, 시세 정보 파싱
         JSONObject jsonResultObject = (JSONObject) jsonParser.parse(priceResult);
@@ -85,7 +96,7 @@ public class BuildingService {
             String pyeong = (String) chosenObject.get("resType1");
 
             // "resType1"(평형) 비교문
-            if (pyeong.equals("142A")) {
+            if (pyeong.equals(buildingRequestDto.getArea())) {
                 building.setPrice((Integer) chosenObject.get("resGeneralPrice"));
 //                System.out.println("------------------------------");
 //                System.out.println("generalPrice = " + generalPrice);
@@ -99,6 +110,10 @@ public class BuildingService {
                 break;
             }
         }
+
+        //입력받은 건물, 주소 DB에 저장.
+        buildingRepository.save(building.getBuildingId());
+        addressRepository.save(address.getAddressId());
 
         return building.getPrice();
     }
