@@ -5,6 +5,7 @@ import clutch.clutchserver.address.repository.AddressRepository;
 import clutch.clutchserver.building.dto.BuildingRequestDto;
 import clutch.clutchserver.building.entity.Building;
 import clutch.clutchserver.building.repository.BuildingRepository;
+import clutch.clutchserver.global.common.enums.LogicType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.codef.api.EasyCodef;
 import io.codef.api.EasyCodefServiceType;
@@ -32,23 +33,6 @@ public class BuildingService {
 
     //건물 시세 구하기
     public int getPrice(BuildingRequestDto buildingRequestDto) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException, ParseException {
-
-        //빌딩 생성
-        Building building = new Building();
-        Address address = new Address();
-
-        //빌딩 저장.
-        building.setBuildingName(buildingRequestDto.getBuildingName());
-        building.setArea(buildingRequestDto.getArea());
-        building.setType(buildingRequestDto.getType());
-
-        address.setAddress(buildingRequestDto.getAddress());
-        address.setDong(buildingRequestDto.getDong());
-        address.setHo(buildingRequestDto.getHo());
-
-        building.setAddress(address);
-
-
 
         //시세 codef api 이용해서 가져오기
         EasyCodef easyCodef = new EasyCodef();
@@ -91,13 +75,14 @@ public class BuildingService {
 
         // 만약 사용자가 자신의 집 평형을 입력하면, 그 정보를 codef api 에서 가져온 데이터들과 비교하여, 해당하는 평형의 시세를 찾는다.
         // 반복문으로 "resType1"(평형) 일치하는지 비교. 그리고 일치하면 매매_일반가(시세) 출력.
+        int price = 0;
         for (Object o : jsonPriceArray) {
             JSONObject chosenObject = (JSONObject) o;
             String pyeong = (String) chosenObject.get("resType1");
 
             // "resType1"(평형) 비교문
             if (pyeong.equals(buildingRequestDto.getArea())) {
-                building.setPrice((Integer) chosenObject.get("resGeneralPrice"));
+                price = (int) chosenObject.get("resGeneralPrice");
 //                System.out.println("------------------------------");
 //                System.out.println("generalPrice = " + generalPrice);
 //                System.out.println("------------------------------");
@@ -105,11 +90,48 @@ public class BuildingService {
             }
         }
 
+        return price;
+    }
+
+    //건물, 주소 DB에 저장하기
+    public void saveBuilding(BuildingRequestDto buildingRequestDto){
+
+        Building building = new Building();
+        Address address = new Address();
+
+        //접수 유형
+        building.setLogicType(buildingRequestDto.getLogicType());
+        if(buildingRequestDto.getLogicType() == LogicType.REPORT)
+        {
+            /*
+                빌딩 정보 set
+            */
+            building.setBuildingName(buildingRequestDto.getBuildingName()); //건물 이름
+            building.setType(buildingRequestDto.getType()); //건물 유형
+            building.setCollateralDate(buildingRequestDto.getCollateralDate()); //근저당 설정 기준일
+
+        }
+        else if(buildingRequestDto.getLogicType() == LogicType.CALCULATE)
+        {
+            /*
+                빌딩 정보 set
+             */
+            building.setArea(buildingRequestDto.getArea()); //건물 평형 수
+            building.setType(buildingRequestDto.getType()); //건물 유형
+
+        }
+
+        //주소 정보 set
+        address.setAddress(buildingRequestDto.getAddress());
+        address.setDong(buildingRequestDto.getDong());
+        address.setHo(buildingRequestDto.getHo());
+
+        //빌딩 엔티티에 주소 set
+        building.setAddress(address);
+
         //입력받은 건물, 주소 DB에 저장.
         buildingRepository.save(building.getBuildingId());
         addressRepository.save(address.getAddressId());
-
-        return building.getPrice();
     }
 
 }
