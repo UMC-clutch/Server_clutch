@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -33,13 +34,16 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "Successfully deleted user")
     @SecurityRequirement(name = "access-token")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "not_comfort/solved/security/not_target 중 하나")
-    public void deleteUser(@RequestBody String request) {
+    public ResponseEntity<?> deleteUser(@RequestBody String request) {
         // 현재 토큰을 사용중인 유저 조회
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String useremail = authentication.getName();    // 해당 유저의 email 조회(getName()은 이메일 조회 의미)
 
+        // String을 enum형으로 변환
         Reason reason = Reason.from(request);
 
         userService.userDelete(useremail, reason);
+
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 }
