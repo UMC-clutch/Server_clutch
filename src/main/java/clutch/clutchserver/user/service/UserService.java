@@ -56,7 +56,7 @@ public class UserService {
         DefaultAssert.isTrue(user.isPresent(), "유저가 올바르지 않습니다.");
         userRepository.delete(user.get());
 
-        // user의 토큰 삭제
+        // user와 연관된 토큰 삭제
         Optional<Token> token = tokenRepository.findByUserId(user.get().getId());
         DefaultAssert.isTrue(token.isPresent(), "유저가 올바르지 않습니다.");
         tokenRepository.delete(token.get());
