@@ -1,5 +1,7 @@
 package clutch.clutchserver.contract.service;
 
+import clutch.clutchserver.building.entity.Building;
+import clutch.clutchserver.building.repository.BuildingRepository;
 import clutch.clutchserver.contract.S3.S3Service;
 import clutch.clutchserver.contract.dto.ContractRequestDto;
 import clutch.clutchserver.contract.entity.Contract;
@@ -10,16 +12,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ContractService {
     private final ContractRepository contractRepository;
     private final S3Service s3UploadService;
+    private final BuildingRepository buildingRepository;
 
 
 
-    public void saveContract(ContractRequestDto requestDto) throws IOException {
+    public void saveContract(ContractRequestDto requestDto,Long buildingId) throws IOException {
         // ContractRequestDto에서 필요한 데이터 추출
         Boolean hasLived = requestDto.getHas_lived();
         LocalDateTime transportReportDate = requestDto.getTransport_report_date();
@@ -31,6 +35,7 @@ public class ContractService {
 
         // S3에 파일 업로드 및 업로드된 파일의 URL 생성
         String s3FileUrl = s3UploadService.uploadFile(contractImg);
+        Optional<Building> building = buildingRepository.findByBuildingId(buildingId);
 
         // Contract 엔티티로 변환하여 데이터 저장
         Contract contract = Contract.builder()
@@ -41,6 +46,7 @@ public class ContractService {
                 .has_applied_dividend(hasAppliedDividend)
                 .deposit(deposit)
                 .contract_img(s3FileUrl)
+                .building(building.orElse(null))
                 // 여기에 필요한 데이터들 추가
                 .build();
 
