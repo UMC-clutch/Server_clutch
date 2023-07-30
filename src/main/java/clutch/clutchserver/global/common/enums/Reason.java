@@ -1,5 +1,6 @@
 package clutch.clutchserver.global.common.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 
 @Getter
@@ -9,8 +10,14 @@ public enum Reason {
     SECURITY("개인정보 및 보안 우려"),
     NOT_TARGET("서비스 대상이 아님");
 
-    private String description;
-    Reason(String description){
-        this.description=description;
+    private final String description;
+
+    Reason(String description) {
+        this.description = description;
+    }
+
+    @JsonCreator
+    public static Reason from(String s) {
+        return Reason.valueOf(s.toUpperCase());
     }
 }
