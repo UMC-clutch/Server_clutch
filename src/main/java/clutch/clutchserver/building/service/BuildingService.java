@@ -94,7 +94,7 @@ public class BuildingService {
     }
 
     //건물, 주소 DB에 저장하기
-    public void saveBuilding(BuildingRequestDto buildingRequestDto){
+    public Building saveBuilding(BuildingRequestDto buildingRequestDto){
 
         Building building = new Building();
         Address address = new Address();
@@ -106,6 +106,7 @@ public class BuildingService {
             /*
                 빌딩 정보 set
             */
+            building.setLogicType(buildingRequestDto.getLogicType()); //접수 유형
             building.setBuildingName(buildingRequestDto.getBuildingName()); //건물 이름
             building.setType(buildingRequestDto.getType()); //건물 유형
             building.setCollateralDate(buildingRequestDto.getCollateralDate()); //근저당 설정 기준일
@@ -116,6 +117,7 @@ public class BuildingService {
             /*
                 빌딩 정보 set
              */
+            building.setLogicType(buildingRequestDto.getLogicType()); //접수 유형
             building.setArea(buildingRequestDto.getArea()); //건물 평형 수
             building.setType(buildingRequestDto.getType()); //건물 유형
 
@@ -132,6 +134,8 @@ public class BuildingService {
         //입력받은 건물, 주소 DB에 저장.
         buildingRepository.save(building);
         addressRepository.save(address);
+
+        return building;
     }
 
 }
