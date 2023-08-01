@@ -94,7 +94,7 @@ public class BuildingService {
     }
 
     //건물, 주소 DB에 저장하기
-    public void saveBuilding(BuildingRequestDto buildingRequestDto){
+    public Building saveBuilding(BuildingRequestDto buildingRequestDto){
 
         Building building = new Building();
         Address address = new Address();
@@ -132,6 +132,8 @@ public class BuildingService {
         //입력받은 건물, 주소 DB에 저장.
         buildingRepository.save(building);
         addressRepository.save(address);
+
+        return building;
     }
 
 }
