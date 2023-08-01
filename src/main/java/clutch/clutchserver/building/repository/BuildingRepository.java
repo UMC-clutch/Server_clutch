@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface BuildingRepository extends JpaRepository<Building, Integer> {
 
-    public Building findByBuildingId(Long buildingId);
+    Optional<Building> findByBuildingId(Long buildingId);
 
 }

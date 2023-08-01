@@ -4,6 +4,7 @@ import clutch.clutchserver.contract.entity.Contract;
 import clutch.clutchserver.global.common.BaseDateEntity;
 import clutch.clutchserver.global.common.enums.ReportStatus;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +17,7 @@ public class Report extends BaseDateEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-// 연관관계 매핑
+    // 연관관계 매핑
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contract_id")
     private Contract contract;
@@ -30,4 +31,17 @@ public class Report extends BaseDateEntity {
     private boolean hasSubmittedContract; // 계약서 제출 여부
     private boolean hasResistance; // 대항력 여부
     private boolean hasRepayment; // 최우선 변제금 가능여부
+
+    @Builder
+    public Report(Long id, Contract contract, ReportStatus status, int repayment, boolean hasLowIncome, boolean hasSubmittedContract, boolean hasResistance, boolean hasRepayment) {
+        this.id = id;
+        this.contract = contract;
+        this.status = status;
+        this.repayment = repayment;
+        this.hasLowIncome = hasLowIncome;
+        this.hasSubmittedContract = hasSubmittedContract;
+        this.hasResistance = hasResistance;
+        this.hasRepayment = hasRepayment;
+    }
 }
+
