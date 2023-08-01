@@ -14,17 +14,14 @@ import java.time.LocalDateTime;
 @Builder
 public class ReportResponseDto {
 
-    @Schema(description = "신고 접수 id")
-    private Long reportId; //신고접수 id
-
-    @Schema(description = "건물 id")
-    private Long buildingId;
-
-    @Schema(description = "신고 상태")
-    private ReportStatus status;
+    @Schema(description = "접수 상태")
+    private ReportStatus reportStatus;
 
     @Schema(description = "신고 날짜")
-    private LocalDateTime reportCreate;
+    private LocalDateTime reportedAt;
+
+    @Schema(description = "신고 접수 id")
+    private Long reportId; //신고접수 id
 
     @Schema(description = "건물 이름", defaultValue = "OO아파트")
     private String buildingName; //건물 이름

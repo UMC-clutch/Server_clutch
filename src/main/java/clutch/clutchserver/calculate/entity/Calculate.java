@@ -6,10 +6,12 @@ import clutch.clutchserver.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Entity
 @Table(name = "calculate")
 @Getter
+@RequiredArgsConstructor
 public class Calculate extends BaseDateEntity {
 
     @Id

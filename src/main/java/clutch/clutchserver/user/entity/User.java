@@ -1,5 +1,6 @@
 package clutch.clutchserver.user.entity;
 
+import clutch.clutchserver.contract.entity.Contract;
 import clutch.clutchserver.global.common.BaseDateEntity;
 import clutch.clutchserver.global.common.enums.AuthProvider;
 import clutch.clutchserver.global.common.enums.Role;
@@ -33,4 +34,8 @@ public class User extends BaseDateEntity {
 
     @Nullable
     private String phoneNumber;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contract_id")
+    private Contract contract;
 }
