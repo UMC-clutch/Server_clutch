@@ -1,6 +1,7 @@
 package clutch.clutchserver.report.controller;
 
 import clutch.clutchserver.building.dto.BuildingRequestDto;
+import clutch.clutchserver.building.dto.BuildingResponseDto;
 import clutch.clutchserver.building.entity.Building;
 import clutch.clutchserver.building.repository.BuildingRepository;
 import clutch.clutchserver.building.service.BuildingService;
@@ -54,11 +55,11 @@ public class ReportController {
     @PostMapping(value = "/v1/report")
     public ResponseEntity<?> receiveReport(@RequestBody BuildingRequestDto buildingRequestDto) {
 
-        ReportResponseDto reportResponseDto = reportService.getReportResDto(buildingRequestDto);
+        BuildingResponseDto buildingResponseDto = reportService.getBuildingResDto(buildingRequestDto);
 
         ApiResponse apiResponse = ApiResponse.builder()
                 .check(true)
-                .information(reportResponseDto)
+                .information(buildingResponseDto)
                 .build();
 
         return ResponseEntity.ok(apiResponse);

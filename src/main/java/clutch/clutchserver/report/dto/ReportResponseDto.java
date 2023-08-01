@@ -17,6 +17,9 @@ public class ReportResponseDto {
     @Schema(description = "신고 접수 id")
     private Long reportId; //신고접수 id
 
+    @Schema(description = "건물 id")
+    private Long buildingId;
+
     @Schema(description = "신고 상태")
     private ReportStatus status;
 
