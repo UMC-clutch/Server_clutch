@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
 @Setter
 public class BuildingRequestDto {
 
+    //건물 id
+    private Long buildingId;
+
     //건물명
     private String buildingName;
 
@@ -22,21 +25,16 @@ public class BuildingRequestDto {
     //호
     private String ho;
 
-    //건물 유형
-    private Type type;
-
-    //전세금
-    private int deposit;
-
     //근저당 설정 기준일
-    private String collateralDate;
+    private LocalDateTime collateralDate;
 
-    //접수 유형(속성)
+    // 접수 유형
     private LogicType logicType;
 
-    //근저당액
-    private int collateralMoney;
+    // 건물 유형
+    private Type type;
 
-    //평형 수
+    // 평형 수
     private String area;
+
 }

@@ -37,7 +37,7 @@ public class Building {
     private Type type;
 
     //근저당 설정 기준일
-    private String collateralDate;
+    private LocalDateTime collateralDate;
 
     //접수 유형(속성)
     @Enumerated(EnumType.STRING)
