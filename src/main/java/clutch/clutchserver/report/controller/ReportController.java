@@ -18,7 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
-
 @RestController
 @RequestMapping(value = "/api")
 @RequiredArgsConstructor
@@ -49,7 +48,7 @@ public class ReportController {
     }
 
     @Operation(summary = "신고 접수 내역 조회", description = "user 토큰으로 신고내역, 계약, 건물 정보 조회")
-    @GetMapping("/v1/report_comp")
+    @GetMapping("/v1/report")
     @SecurityRequirement(name = "access-token")
     public ResponseEntity<?> completedReport() {
         // 현재 토큰을 사용중인 유저 조회
@@ -61,6 +60,24 @@ public class ReportController {
         ApiResponse apiResponse = ApiResponse.builder()
                 .check(true)
                 .information(reportResponseDto)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @Operation(summary = "신고 취소", description = "user 토큰으로 신고내역 삭제")
+    @DeleteMapping("/v1/report")
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully deleted report")
+    @SecurityRequirement(name = "access-token")
+    public ResponseEntity<?> deleteReport() {
+        // 현재 토큰을 사용중인 유저 조회
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String useremail = authentication.getName();    // 해당 유저의 email 조회(getName()은 이메일 조회 의미)
+
+        reportService.reportDelete(useremail);
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
                 .build();
 
         return ResponseEntity.ok(apiResponse);
