@@ -2,10 +2,16 @@ package clutch.clutchserver.building.service;
 
 import clutch.clutchserver.address.entity.Address;
 import clutch.clutchserver.address.repository.AddressRepository;
+import clutch.clutchserver.building.dto.BuildingPriceRequestDto;
+import clutch.clutchserver.building.dto.BuildingPriceResponseDto;
 import clutch.clutchserver.building.dto.BuildingRequestDto;
 import clutch.clutchserver.building.entity.Building;
 import clutch.clutchserver.building.repository.BuildingRepository;
+import clutch.clutchserver.global.DefaultAssert;
 import clutch.clutchserver.global.common.enums.LogicType;
+import clutch.clutchserver.global.payload.ApiResponse;
+import clutch.clutchserver.user.entity.User;
+import clutch.clutchserver.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.codef.api.EasyCodef;
 import io.codef.api.EasyCodefServiceType;
@@ -15,11 +21,13 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.Optional;
 
 @Transactional
 @RequiredArgsConstructor
@@ -27,12 +35,13 @@ import java.util.HashMap;
 @Service
 public class BuildingService {
 
+    private final UserRepository userRepository;
     private final BuildingRepository buildingRepository;
     private final AddressRepository addressRepository;
 
 
     //건물 시세 구하기
-    public int getPrice(BuildingRequestDto buildingRequestDto) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException, ParseException {
+    public String getPrice(Building building) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException, ParseException {
 
         //시세 codef api 이용해서 가져오기
         EasyCodef easyCodef = new EasyCodef();
@@ -44,7 +53,7 @@ public class BuildingService {
         //요청 파라미터 설정(단지 일련번호 조회)
         HashMap<String, Object> parameterMap = new HashMap<String, Object>();
         parameterMap.put("organization", "0004");
-        parameterMap.put("address", buildingRequestDto.getAddress());
+        parameterMap.put("address", building.getAddress().getAddress());
 
         //단지 일련번호 조회
         String productUrl = "/v1/kr/etc/ld/kb/serial-number";
@@ -75,14 +84,14 @@ public class BuildingService {
 
         // 만약 사용자가 자신의 집 평형을 입력하면, 그 정보를 codef api 에서 가져온 데이터들과 비교하여, 해당하는 평형의 시세를 찾는다.
         // 반복문으로 "resType1"(평형) 일치하는지 비교. 그리고 일치하면 매매_일반가(시세) 출력.
-        int price = 0;
+        String price = "";
         for (Object o : jsonPriceArray) {
             JSONObject chosenObject = (JSONObject) o;
             String pyeong = (String) chosenObject.get("resType1");
 
             // "resType1"(평형) 비교문
-            if (pyeong.equals(buildingRequestDto.getArea())) {
-                price = (int) chosenObject.get("resGeneralPrice");
+            if (pyeong.equals(building.getArea())) {
+                price = (String) chosenObject.get("resGeneralPrice");
 //                System.out.println("------------------------------");
 //                System.out.println("generalPrice = " + generalPrice);
 //                System.out.println("------------------------------");
@@ -136,6 +145,55 @@ public class BuildingService {
         addressRepository.save(address);
 
         return building;
+    }
+
+    // 건물 입력받아 시세 계산하기
+    public ResponseEntity<?> getMarketPrice(String userEmail, BuildingPriceRequestDto buildingPriceReq) throws UnsupportedEncodingException, ParseException, JsonProcessingException, InterruptedException {
+        Optional<User> userOptional = userRepository.findByEmail(userEmail);
+        DefaultAssert.isTrue(userOptional.isPresent(), "유저가 올바르지 않습니다.");
+
+        Building building = new Building();
+        Address address = new Address();
+
+        //접수 유형
+        building.setLogicType(LogicType.CALCULATE);
+        building.setBuildingName(buildingPriceReq.getBuildingName()); //건물 이름
+        building.setType(buildingPriceReq.getType()); //건물 유형
+        building.setArea(buildingPriceReq.getArea()); //건물 평형 수
+
+        //주소 정보 set
+        address.setAddress(buildingPriceReq.getAddress());
+        address.setDong(buildingPriceReq.getDong());
+        address.setHo(buildingPriceReq.getHo());
+
+        //빌딩 엔티티에 주소 set
+        building.setAddress(address);
+
+        addressRepository.save(address);
+
+        //시세 저장
+        building.setPrice(getPrice(building));
+
+        buildingRepository.save(building);
+
+        BuildingPriceResponseDto buildingPriceRes = BuildingPriceResponseDto.builder()
+                .buildingName(building.getBuildingName())
+                .buildingId(building.getBuildingId())
+                .address(address.getAddress())
+                .ho(address.getHo())
+                .dong(address.getDong())
+                .type(building.getType())
+                .area(building.getArea())
+                .logicType(building.getLogicType())
+                .price(building.getPrice())
+                .build();
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(buildingPriceRes)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
 }

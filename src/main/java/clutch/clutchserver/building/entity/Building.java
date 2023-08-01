@@ -30,7 +30,7 @@ public class Building {
     private String buildingName;
 
     //건물 시세
-    private int price;
+    private String price;
 
     //건물 유형
     @Enumerated(EnumType.STRING)

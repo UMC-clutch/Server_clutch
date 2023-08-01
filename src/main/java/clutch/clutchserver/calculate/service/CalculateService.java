@@ -3,6 +3,7 @@ package clutch.clutchserver.calculate.service;
 import clutch.clutchserver.address.entity.Address;
 import clutch.clutchserver.building.entity.Building;
 import clutch.clutchserver.building.repository.BuildingRepository;
+import clutch.clutchserver.building.service.BuildingService;
 import clutch.clutchserver.calculate.dto.CalculateRequestDto;
 import clutch.clutchserver.calculate.dto.CalculateResponseDto;
 import clutch.clutchserver.calculate.dto.FindCalculationResponseDto;

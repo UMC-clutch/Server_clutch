@@ -21,7 +21,7 @@ public class CalculateController {
 
     // 사기 위험성 계산
     @Operation(summary = "사기 위험성 계산 API")
-    @PostMapping ("/api/calculate")
+    @PostMapping ("/v1/calculate")
     @SecurityRequirement(name = "access-token")
     public ResponseEntity<?> calculateRisk(
             @Valid @RequestBody CalculateRequestDto calculateReq
@@ -35,7 +35,7 @@ public class CalculateController {
 
     // 사기 위험성 계산 내역 조회(전체)
     @Operation(summary = "사기 위험성 계산 내역 조회 API(전체)")
-    @GetMapping("/api/calculate")
+    @GetMapping("/v1/calculate")
     @SecurityRequirement(name = "access-token")
     public ResponseEntity<?> findCalculation() throws JsonProcessingException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -46,7 +46,7 @@ public class CalculateController {
 
     // 사기 위험성 계산 내역 조회(계산ID로 하나만)
     @Operation(summary = "사기 위험성 계산 내역 조회 API(계산ID로)")
-    @GetMapping("/api/calculate/{calculateId}")
+    @GetMapping("/v1/calculate/{calculateId}")
     @SecurityRequirement(name = "access-token")
     public ResponseEntity<?> findOneCalculation(
             @PathVariable(value = "calculateId") Long calculateId
