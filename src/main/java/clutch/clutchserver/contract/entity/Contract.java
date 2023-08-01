@@ -3,7 +3,6 @@ package clutch.clutchserver.contract.entity;
 import clutch.clutchserver.building.entity.Building;
 import clutch.clutchserver.global.common.BaseDateEntity;
 import clutch.clutchserver.report.entity.Report;
-import clutch.clutchserver.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,10 +29,6 @@ public class Contract extends BaseDateEntity {
     private Boolean has_applied_dividend;
     private Integer deposit;
     private String contract_img;
-//
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id")
-//    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "building_id")

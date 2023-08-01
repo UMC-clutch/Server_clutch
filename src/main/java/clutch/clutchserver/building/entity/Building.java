@@ -3,9 +3,7 @@ package clutch.clutchserver.building.entity;
 import clutch.clutchserver.address.entity.Address;
 import clutch.clutchserver.global.common.enums.LogicType;
 import clutch.clutchserver.global.common.enums.Type;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Null;
 import lombok.*;
 
 import java.time.LocalDateTime;
