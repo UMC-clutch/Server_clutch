@@ -1,4 +1,4 @@
 spring:
   profiles:
     include: db, real, local
-    active: local
+    active: db, real
