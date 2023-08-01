@@ -13,12 +13,6 @@ import java.util.Optional;
 
 public class DefaultAssert extends Assert{
 
-    public static void isTrue(boolean value){
-        if(!value){
-            throw new DefaultException(ErrorCode.INVALID_CHECK);
-        }
-    }
-
     public static void isTrue(boolean value, String message){
         if(!value){
             throw new DefaultException(ErrorCode.INVALID_CHECK, message);
