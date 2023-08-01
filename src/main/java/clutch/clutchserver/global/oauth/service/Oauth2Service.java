@@ -31,6 +31,7 @@ public class Oauth2Service {
 
 
 
+
     public User getKakaoInfo(String accessToken) throws IOException, ParseException {
 
         // 예시로 주어진 액세스 토큰

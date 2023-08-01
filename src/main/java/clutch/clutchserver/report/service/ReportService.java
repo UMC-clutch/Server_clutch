@@ -4,12 +4,10 @@ import clutch.clutchserver.address.entity.Address;
 import clutch.clutchserver.building.dto.BuildingRequestDto;
 import clutch.clutchserver.building.dto.BuildingResponseDto;
 import clutch.clutchserver.building.entity.Building;
-import clutch.clutchserver.building.repository.BuildingRepository;
 import clutch.clutchserver.building.service.BuildingService;
 import clutch.clutchserver.contract.entity.Contract;
 import clutch.clutchserver.report.dto.ReportResponseDto;
 import clutch.clutchserver.report.entity.Report;
-import clutch.clutchserver.report.repository.ReportRepository;
 import clutch.clutchserver.user.entity.User;
 import clutch.clutchserver.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReportService {
 
-    private final ReportRepository reportRepository;
-    private final BuildingRepository buildingRepository;
     private final BuildingService buildingService;
     private final UserRepository userRepository;
 
@@ -66,9 +62,6 @@ public class ReportService {
                 .deposit(findContract.getDeposit())
                 .build();
     }
-
-
-
 }
 
 
