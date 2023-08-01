@@ -139,6 +139,8 @@ public class BuildingService {
 
         //빌딩 엔티티에 주소 set
         building.setAddress(address);
+        System.out.println(building.getClass());
+        System.out.println(building.getBuildingId());
 
         //입력받은 건물, 주소 DB에 저장.
         buildingRepository.save(building);
