@@ -11,6 +11,10 @@ import clutch.clutchserver.global.common.enums.ReportStatus;
 import clutch.clutchserver.image.entity.Image;
 import clutch.clutchserver.image.repository.ImageRepository;
 import clutch.clutchserver.report.dto.ReportResponseDto;
+import clutch.clutchserver.report.service.ReportService;
+import clutch.clutchserver.user.entity.User;
+import clutch.clutchserver.user.repository.UserRepository;
+import clutch.clutchserver.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,10 +31,13 @@ public class ContractService {
     private final BuildingRepository buildingRepository;
 
     private final ImageRepository imageRepository;
+    private final ReportService reportService;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
 
 
-    public ReportResponseDto saveContract(ContractRequestDto requestDto, Long buildingId) throws IOException {
+    public ReportResponseDto saveContract(ContractRequestDto requestDto, Long buildingId, Optional<User> user) throws IOException {
         // ContractRequestDto에서 필요한 데이터 추출
         Boolean hasLived = requestDto.getHas_lived();
         LocalDateTime transportReportDate = requestDto.getTransport_report_date();
@@ -39,12 +46,12 @@ public class ContractService {
         Boolean hasAppliedDividend = requestDto.getHas_applied_dividend();
         Integer deposit = requestDto.getDeposit();
 
-        System.out.println(hasLived);
-        System.out.println(transportReportDate);
 
-        Optional<Building> building = buildingRepository.findByBuildingId(buildingId);
-        System.out.println(building.get().getAddress());
-        Address address = building.get().getAddress();
+
+        Optional<Building> buildingOptional = buildingRepository.findByBuildingId(buildingId);
+        Building building = buildingOptional.orElseThrow(() -> new IllegalArgumentException("Invalid building ID"));
+        System.out.println(building.getAddress());
+        Address address = building.getAddress();
 
         // Contract 엔티티로 변환하여 데이터 저장
         Contract contract = Contract.builder()
@@ -54,29 +61,35 @@ public class ContractService {
                 .has_landlord_intervene(hasLandlordIntervene)
                 .has_applied_dividend(hasAppliedDividend)
                 .deposit(deposit)
-                .building(building.orElse(null))
+                .building(building)
                 // 여기에 필요한 데이터들 추가
                 .build();
-        System.out.println(contract.toString());
+
 
         // Contract 엔티티를 ContractRepository를 사용하여 저장
         contractRepository.save(contract);
         ReportResponseDto response = createReportResponse(contract, building,address);
+
+        User userEntity =user.get();
+        if(userEntity.getContract()==null){
+            user.get().updateContract(contract);
+            userRepository.save(userEntity);
+        }
         return response;
     }
 
-    public ReportResponseDto createReportResponse(Contract contract, Optional<Building> building,Address address) throws IOException {
+    public ReportResponseDto createReportResponse(Contract contract, Building building,Address address) throws IOException {
         // ReportResponseDto 생성
         ReportResponseDto reportResponseDto = ReportResponseDto.builder()
                 .reportStatus(ReportStatus.DECISIONING) // 예시로 상태를 PENDING으로 설정
                 .reportedAt(LocalDateTime.now()) // 현재 시간으로 설정
                 .reportId(contract.getId()) // Contract의 id를 신고 접수 id로 설정
-                .buildingName(building != null ? building.get().getBuildingName() : null)
-                .collateralDate(building != null ? building.get().getCollateralDate() : null)
-                .address(building != null ? String.valueOf(building.get().getAddress()) : null)
+                .buildingName(building != null ? building.getBuildingName() : null)
+                .collateralDate(building != null ? building.getCollateralDate() : null)
+                .address(building != null ? String.valueOf(building.getAddress()) : null)
                 .dong(building != null ? address.getDong() : null)
                 .ho(building != null ? address.getHo() : null)
-                .buildingType(building != null ? building.get().getType() : null)
+                .buildingType(building != null ? building.getType() : null)
                 .has_landlord_intervene(contract.getHas_landlord_intervene())
                 .has_applied_dividend(contract.getHas_applied_dividend())
                 .deposit(contract.getDeposit())
@@ -88,7 +101,7 @@ public class ContractService {
         return reportResponseDto;
     }
 
-    public String uploadImage(Long buildingId, MultipartFile file) throws IOException {
+    public String uploadImage(Long buildingId, MultipartFile file, Long userId) throws IOException {
         // S3에 이미지 파일 업로드 및 업로드된 파일의 URL 생성
         String imageUrl = s3UploadService.uploadFile(file);
 
@@ -96,9 +109,12 @@ public class ContractService {
         Building building = buildingRepository.findByBuildingId(buildingId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid building ID"));
 
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid building ID"));
+
         Image image = Image.builder()
                 .url(imageUrl)
                 .building(building)
+                .user(user)
                 .build();
 
         // Image 엔티티를 저장

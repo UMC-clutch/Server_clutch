@@ -11,6 +11,7 @@ import clutch.clutchserver.report.entity.Report;
 import clutch.clutchserver.user.entity.User;
 import clutch.clutchserver.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,6 +63,16 @@ public class ReportService {
                 .deposit(findContract.getDeposit())
                 .build();
     }
+
+//    public ResponseEntity<?> saveReport(Long contractId) {
+//        //대항력 여부
+//
+//
+//        //소액임차인 여부
+//
+//
+//        //최우선 변제금
+//    }
 }
 
 

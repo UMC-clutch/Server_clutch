@@ -2,6 +2,7 @@ package clutch.clutchserver.image.entity;
 
 import clutch.clutchserver.building.entity.Building;
 import clutch.clutchserver.global.common.BaseDateEntity;
+import clutch.clutchserver.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,4 +25,9 @@ public class Image extends BaseDateEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "building_id")
     private Building building;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
 }
