@@ -31,6 +31,7 @@ public class CalculateService {
     private final BuildingRepository buildingRepository;
 
     //사기 위험성 계산
+    @Transactional      // read-only 해제
     public ResponseEntity<?> calculateRisk(String userEmail, CalculateRequestDto calculateReq) {
 
         Optional<User> userOptional = userRepository.findByEmail(userEmail);
@@ -43,18 +44,29 @@ public class CalculateService {
         DefaultAssert.isTrue(buildingOptional.isPresent(), "올바르지 않은 빌딩입니다.");
         building = buildingOptional.get();
 
+        // 근저당액 저장
+        building.setCollateralMoney(calculateReq.getCollateral());
+
         Calculate calculate = Calculate.builder()
                 .building(building)
                 .deposit(calculateReq.getDeposit())
                 .hasDanger(calculateReq.getIsDangerous())
+                .user(user)
                 .build();
 
         calculateRepository.save(calculate);
+
+        System.out.println(calculate.getId());
+        System.out.println(calculate.getBuilding().getBuildingId());
+        System.out.println(calculate.getDeposit());
+        System.out.println(calculate.getBuilding().getCollateralMoney());
+        System.out.println(calculate.isHasDanger());
 
         CalculateResponseDto calculateRes = CalculateResponseDto.builder()
                 .id(calculate.getId())
                 .buildingId(calculate.getBuilding().getBuildingId())
                 .deposit(calculate.getDeposit())
+                .collateral(calculate.getBuilding().getCollateralMoney())
                 .isDangerous(calculate.isHasDanger())
                 .build();
 

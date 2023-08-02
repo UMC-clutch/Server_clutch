@@ -11,7 +11,7 @@ public class CalculateRequestDto {
 
     private BigInteger collateral;  // 근저당액
 
-    private BigInteger deposit;            // 전세금
+    private BigInteger deposit;     // 전세금
 
     private Boolean isDangerous;    // 위험 여부
 
