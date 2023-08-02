@@ -75,6 +75,7 @@ public class ContractService {
             user.get().updateContract(contract);
             userRepository.save(userEntity);
         }
+        reportService.saveReport(userEntity.getId(),contract,building,address);
         return response;
     }
 
