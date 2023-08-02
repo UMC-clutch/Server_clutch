@@ -56,12 +56,6 @@ public class CalculateService {
 
         calculateRepository.save(calculate);
 
-        System.out.println(calculate.getId());
-        System.out.println(calculate.getBuilding().getBuildingId());
-        System.out.println(calculate.getDeposit());
-        System.out.println(calculate.getBuilding().getCollateralMoney());
-        System.out.println(calculate.isHasDanger());
-
         CalculateResponseDto calculateRes = CalculateResponseDto.builder()
                 .id(calculate.getId())
                 .buildingId(calculate.getBuilding().getBuildingId())
