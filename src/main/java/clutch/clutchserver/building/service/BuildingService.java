@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -41,7 +42,7 @@ public class BuildingService {
 
 
     //건물 시세 구하기
-    public String getPrice(Building building) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException, ParseException {
+    public BigInteger getPrice(Building building) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException, ParseException {
 
         //시세 codef api 이용해서 가져오기
         EasyCodef easyCodef = new EasyCodef();
@@ -87,16 +88,16 @@ public class BuildingService {
 
         // 만약 사용자가 자신의 집 평형을 입력하면, 그 정보를 codef api 에서 가져온 데이터들과 비교하여, 해당하는 평형의 시세를 찾는다.
         // 반복문으로 "resType1"(평형) 일치하는지 비교. 그리고 일치하면 매매_일반가(시세) 출력.
-        String price = "";
-        if (isPyeong) {
 
-            for (Object o : jsonPriceArray) {
-                JSONObject chosenObject = (JSONObject) o;
-                String pyeong = (String) chosenObject.get("resType1");
+        BigInteger price = BigInteger.valueOf(0);
+        for (Object o : jsonPriceArray) {
+            JSONObject chosenObject = (JSONObject) o;
+            String pyeong = (String) chosenObject.get("resType1");
 
-                // "resType1"(평형) 비교문
-                if (pyeong.equals(building.getArea())) {
-                    price = (String) chosenObject.get("resGeneralPrice");
+            // "resType1"(평형) 비교문
+            if (pyeong.equals(building.getArea())) {
+                price = new BigInteger((String) chosenObject.get("resGeneralPrice"));
+
 //                System.out.println("------------------------------");
 //                System.out.println("generalPrice = " + generalPrice);
 //                System.out.println("------------------------------");

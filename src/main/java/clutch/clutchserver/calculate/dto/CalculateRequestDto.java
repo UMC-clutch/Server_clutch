@@ -2,13 +2,17 @@ package clutch.clutchserver.calculate.dto;
 
 import lombok.Data;
 
+import java.math.BigInteger;
+
 @Data
 public class CalculateRequestDto {
 
-    private Long buildingId;
+    private Long buildingId;        // 빌딩 ID
 
-    private int deposit;
+    private BigInteger collateral;  // 근저당액
 
-    private Boolean isDangerous;
+    private BigInteger deposit;     // 전세금
+
+    private Boolean isDangerous;    // 위험 여부
 
 }

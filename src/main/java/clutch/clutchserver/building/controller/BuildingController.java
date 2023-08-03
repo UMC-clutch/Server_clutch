@@ -29,7 +29,7 @@ public class BuildingController {
 
     // 사기 위험성 계산
     @Operation(summary = "건물 저장, 시세 조회 API")
-    @PostMapping("/v1/buildingPrcie")
+    @PostMapping("/v1/buildingPrice")
     @SecurityRequirement(name = "access-token")
     public ResponseEntity<?> saveBuildingAndGetMarketPrice(
             @Valid @RequestBody BuildingPriceRequestDto buildingPriceReq
