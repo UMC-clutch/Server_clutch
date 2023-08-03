@@ -8,8 +8,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.math.BigInteger;
-
 @Entity
 @Table(name = "calculate")
 @Getter
@@ -28,11 +26,11 @@ public class Calculate extends BaseDateEntity {
     @JoinColumn(name = "building_id")
     private Building building;
 
-    private BigInteger deposit; // 보증금
+    private int deposit; // 보증금
     private boolean hasDanger; // 위험여부
 
     @Builder
-    public Calculate(Long id, User user, Building building, BigInteger deposit, boolean hasDanger) {
+    public Calculate(Long id, User user, Building building, int deposit, boolean hasDanger) {
         this.id = id;
         this.user = user;
         this.building = building;

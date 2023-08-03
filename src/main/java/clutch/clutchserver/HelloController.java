@@ -23,7 +23,7 @@ public class HelloController {
     }
 
     //유저 조회
-    @GetMapping("/v1/users")
+    @GetMapping("/api/users")
     @SecurityRequirement(name = "access-token")
     public ResponseEntity<?> findUser() {
         // 현재 토큰을 사용중인 유저 조회
