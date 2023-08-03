@@ -1,7 +1,5 @@
 package clutch.clutchserver.building.service;
 
-import clutch.clutchserver.address.entity.Address;
-import clutch.clutchserver.address.repository.AddressRepository;
 import clutch.clutchserver.building.dto.BuildingPriceRequestDto;
 import clutch.clutchserver.building.dto.BuildingPriceResponseDto;
 import clutch.clutchserver.building.dto.BuildingRequestDto;
@@ -38,7 +36,6 @@ public class BuildingService {
 
     private final UserRepository userRepository;
     private final BuildingRepository buildingRepository;
-    private final AddressRepository addressRepository;
 
 
     //건물 시세 구하기
@@ -54,7 +51,7 @@ public class BuildingService {
         //요청 파라미터 설정(단지 일련번호 조회)
         HashMap<String, Object> parameterMap = new HashMap<String, Object>();
         parameterMap.put("organization", "0004");
-        parameterMap.put("address", building.getAddress().getAddress());
+        parameterMap.put("address", building.getAddress());
 
         //단지 일련번호 조회
         String productUrl = "/v1/kr/etc/ld/kb/serial-number";
@@ -114,8 +111,8 @@ public class BuildingService {
                 String ho = (String) chosenObject.get("reqHo");
 
                 // "resType1"(평형) 비교문
-                if (dong.equals(building.getAddress().getDong())) {
-                    if (ho.equals(building.getAddress().getHo())) {
+                if (dong.equals(building.getDong())) {
+                    if (ho.equals(building.getHo())) {
                         price = new BigInteger((String) chosenObject.get("resGeneralPrice"));
 //                        System.out.println("------------------------------");
 //                        System.out.println("generalPrice = " + generalPrice);
@@ -134,7 +131,6 @@ public class BuildingService {
     public Building saveBuilding(BuildingRequestDto buildingRequestDto) {
 
         Building building = new Building();
-        Address address = new Address();
 
         //접수 유형
         building.setLogicType(buildingRequestDto.getLogicType());
@@ -158,18 +154,16 @@ public class BuildingService {
         }
 
         //주소 정보 set
-        address.setAddress(buildingRequestDto.getAddress());
-        address.setDong(buildingRequestDto.getDong());
-        address.setHo(buildingRequestDto.getHo());
+        building.setAddress(buildingRequestDto.getAddress());
+        building.setDong(buildingRequestDto.getDong());
+        building.setHo(buildingRequestDto.getHo());
 
         //빌딩 엔티티에 주소 set
-        building.setAddress(address);
         System.out.println(building.getClass());
         System.out.println(building.getBuildingId());
 
         //입력받은 건물, 주소 DB에 저장.
         buildingRepository.save(building);
-        addressRepository.save(address);
 
         return building;
     }
@@ -180,7 +174,6 @@ public class BuildingService {
         DefaultAssert.isTrue(userOptional.isPresent(), "유저가 올바르지 않습니다.");
 
         Building building = new Building();
-        Address address = new Address();
 
         //접수 유형
         building.setLogicType(LogicType.CALCULATE);
@@ -189,14 +182,9 @@ public class BuildingService {
         building.setArea(buildingPriceReq.getArea()); //건물 평형 수
 
         //주소 정보 set
-        address.setAddress(buildingPriceReq.getAddress());
-        address.setDong(buildingPriceReq.getDong());
-        address.setHo(buildingPriceReq.getHo());
-
-        //빌딩 엔티티에 주소 set
-        building.setAddress(address);
-
-        addressRepository.save(address);
+        building.setAddress(buildingPriceReq.getAddress());
+        building.setDong(buildingPriceReq.getDong());
+        building.setHo(buildingPriceReq.getHo());
 
         //시세 저장
         building.setPrice(getPrice(building));
@@ -206,9 +194,9 @@ public class BuildingService {
         BuildingPriceResponseDto buildingPriceRes = BuildingPriceResponseDto.builder()
                 .buildingName(building.getBuildingName())
                 .buildingId(building.getBuildingId())
-                .address(address.getAddress())
-                .ho(address.getHo())
-                .dong(address.getDong())
+                .address(building.getAddress())
+                .ho(building.getHo())
+                .dong(building.getDong())
                 .type(building.getType())
                 .area(building.getArea())
                 .logicType(building.getLogicType())

@@ -1,6 +1,5 @@
 package clutch.clutchserver.contract.service;
 
-import clutch.clutchserver.address.entity.Address;
 import clutch.clutchserver.building.entity.Building;
 import clutch.clutchserver.building.repository.BuildingRepository;
 import clutch.clutchserver.contract.S3.S3Service;
@@ -21,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -41,8 +41,8 @@ public class ContractService {
     public ReportResponseDto saveContract(ContractRequestDto requestDto, Long buildingId, Optional<User> user) throws IOException {
         // ContractRequestDto에서 필요한 데이터 추출
         Boolean hasLived = requestDto.getHas_lived();
-        LocalDateTime transportReportDate = requestDto.getTransport_report_date();
-        LocalDateTime confirmationDate = requestDto.getConfirmation_date();
+        LocalDate transportReportDate = requestDto.getTransport_report_date();
+        LocalDate confirmationDate = requestDto.getConfirmation_date();
         Boolean hasLandlordIntervene = requestDto.getHas_landlord_intervene();
         Boolean hasAppliedDividend = requestDto.getHas_applied_dividend();
         BigInteger deposit = requestDto.getDeposit();
@@ -52,7 +52,6 @@ public class ContractService {
         Optional<Building> buildingOptional = buildingRepository.findByBuildingId(buildingId);
         Building building = buildingOptional.orElseThrow(() -> new IllegalArgumentException("Invalid building ID"));
         System.out.println(building.getAddress());
-        Address address = building.getAddress();
 
         // Contract 엔티티로 변환하여 데이터 저장
         Contract contract = Contract.builder()
@@ -69,18 +68,18 @@ public class ContractService {
 
         // Contract 엔티티를 ContractRepository를 사용하여 저장
         contractRepository.save(contract);
-        ReportResponseDto response = createReportResponse(contract, building,address);
+        ReportResponseDto response = createReportResponse(contract, building);
 
         User userEntity =user.get();
         if(userEntity.getContract()==null){
             user.get().updateContract(contract);
             userRepository.save(userEntity);
         }
-        reportService.saveReport(userEntity.getId(),contract,building,address);
+        reportService.saveReport(userEntity.getId(),contract,building);
         return response;
     }
 
-    public ReportResponseDto createReportResponse(Contract contract, Building building,Address address) throws IOException {
+    public ReportResponseDto createReportResponse(Contract contract, Building building) throws IOException {
         // ReportResponseDto 생성
         ReportResponseDto reportResponseDto = ReportResponseDto.builder()
                 .reportStatus(ReportStatus.DECISIONING) // 예시로 상태를 PENDING으로 설정
@@ -89,8 +88,8 @@ public class ContractService {
                 .buildingName(building != null ? building.getBuildingName() : null)
                 .collateralDate(building != null ? building.getCollateralDate() : null)
                 .address(building != null ? String.valueOf(building.getAddress()) : null)
-                .dong(building != null ? address.getDong() : null)
-                .ho(building != null ? address.getHo() : null)
+                .dong(building != null ? building.getDong() : null)
+                .ho(building != null ? building.getHo() : null)
                 .buildingType(building != null ? building.getType() : null)
                 .has_landlord_intervene(contract.getHas_landlord_intervene())
                 .has_applied_dividend(contract.getHas_applied_dividend())

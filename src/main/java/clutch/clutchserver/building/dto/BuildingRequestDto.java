@@ -4,6 +4,7 @@ import clutch.clutchserver.global.common.enums.LogicType;
 import clutch.clutchserver.global.common.enums.Type;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -23,7 +24,7 @@ public class BuildingRequestDto {
     private String ho;
 
     //근저당 설정 기준일
-    private LocalDateTime collateralDate;
+    private LocalDate collateralDate;
 
     // 접수 유형
     private LogicType logicType;

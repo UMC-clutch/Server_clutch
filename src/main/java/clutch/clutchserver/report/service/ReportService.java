@@ -1,6 +1,5 @@
 package clutch.clutchserver.report.service;
 
-import clutch.clutchserver.address.entity.Address;
 import clutch.clutchserver.building.dto.BuildingRequestDto;
 import clutch.clutchserver.building.dto.BuildingResponseDto;
 import clutch.clutchserver.building.entity.Building;
@@ -44,6 +43,9 @@ public class ReportService {
                 .buildingId(building.getBuildingId())
                 .buildingName(building.getBuildingName())
                 .address(building.getAddress())
+                .dong(building.getDong())
+                .ho(building.getHo())
+                .collateralDate(building.getCollateralDate())
                 .type(building.getType())
                 .build();
 
@@ -55,16 +57,15 @@ public class ReportService {
         Contract findContract = findUser.getContract();
         Report findReport = reportRepository.findByContractId(findContract.getId()).get();
         Building findBuilding = findContract.getBuilding();
-        Address findAddress = findBuilding.getAddress();
 
         return ReportResponseDto.builder()
                 .reportStatus(findReport.getStatus())
                 .reportedAt(findReport.getCreatedAt())
                 .buildingName(findBuilding.getBuildingName())
                 .collateralDate(findBuilding.getCollateralDate())
-                .address(findAddress.getAddress())
-                .dong(findAddress.getDong())
-                .ho(findAddress.getHo())
+                .address(findBuilding.getAddress())
+                .dong(findBuilding.getDong())
+                .ho(findBuilding.getHo())
                 .buildingType(findBuilding.getType())
                 .has_lived(findContract.getHas_lived())
                 .transport_report_date(findContract.getTransport_report_date())
@@ -87,7 +88,8 @@ public class ReportService {
         reportRepository.delete(findReport.get());
     }
 
-    public void saveReport(Long userId,Contract contract,Building building,Address address) {
+    public void saveReport(Long userId,Contract contract,Building building) {
+
         Boolean resist = false;
         Boolean has_image = false;
         Boolean has_low_income =false;
@@ -104,7 +106,7 @@ public class ReportService {
             resist =false;
         }
         //소액임차인 여부
-        int calculateResult = calculateDeposit.calculate(contract.getDeposit(),address.getAddress(),contract.getConfirmation_date());
+        int calculateResult = calculateDeposit.calculate(contract.getDeposit(), building.getAddress(),contract.getConfirmation_date());
         if(calculateResult!=0){
             has_low_income =true;
         }
