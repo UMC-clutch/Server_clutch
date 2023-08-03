@@ -8,6 +8,7 @@ import clutch.clutchserver.contract.entity.Contract;
 import clutch.clutchserver.contract.repository.ContractRepository;
 import clutch.clutchserver.global.common.CalculateDeposit;
 import clutch.clutchserver.global.common.enums.ReportStatus;
+import clutch.clutchserver.global.payload.ApiResponse;
 import clutch.clutchserver.image.entity.Image;
 import clutch.clutchserver.image.repository.ImageRepository;
 import clutch.clutchserver.report.dto.ReportResponseDto;
@@ -16,6 +17,7 @@ import clutch.clutchserver.report.repository.ReportRepository;
 import clutch.clutchserver.user.entity.User;
 import clutch.clutchserver.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +38,7 @@ public class ReportService {
     private final ContractRepository contractRepository;
 
     //건물 정보 입력 반환
-    public BuildingResponseDto getBuildingResDto(BuildingRequestDto buildingRequestDto){
+    public ResponseEntity<?> getBuildingResDto(BuildingRequestDto buildingRequestDto){
 
 
         Building building = buildingService.saveBuilding(buildingRequestDto);
@@ -51,16 +53,21 @@ public class ReportService {
                 .type(building.getType())
                 .build();
 
-        return buildingResponseDto;
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(buildingResponseDto)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
-    public ReportResponseDto getCompReport(String useremail) {
+    public ResponseEntity<?> getCompReport(String useremail) {
         User findUser = userRepository.findByEmail(useremail).get();
         Contract findContract = findUser.getContract();
         Report findReport = reportRepository.findByContractId(findContract.getId()).get();
         Building findBuilding = findContract.getBuilding();
 
-        return ReportResponseDto.builder()
+        ReportResponseDto reportResponseDto = ReportResponseDto.builder()
                 .reportStatus(findReport.getStatus())
                 .reportedAt(findReport.getCreatedAt())
                 .buildingName(findBuilding.getBuildingName())
@@ -76,6 +83,13 @@ public class ReportService {
                 .has_applied_dividend(findContract.getHas_applied_dividend())
                 .deposit(findContract.getDeposit())
                 .build();
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(reportResponseDto)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     @Transactional

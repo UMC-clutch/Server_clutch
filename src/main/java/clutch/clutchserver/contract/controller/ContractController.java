@@ -5,6 +5,7 @@ import clutch.clutchserver.contract.S3.S3Service;
 import clutch.clutchserver.contract.dto.ContractRequestDto;
 import clutch.clutchserver.contract.entity.Contract;
 import clutch.clutchserver.contract.service.ContractService;
+import clutch.clutchserver.global.payload.ApiResponse;
 import clutch.clutchserver.report.dto.ReportResponseDto;
 import clutch.clutchserver.user.entity.User;
 import clutch.clutchserver.user.repository.UserRepository;
@@ -36,7 +37,7 @@ public class ContractController {
 
     @PostMapping("/contract/{id}")
     @SecurityRequirement(name = "access-token")
-    public ResponseEntity<ReportResponseDto> uploadFile(@PathVariable Long id, @RequestBody ContractRequestDto requestDto) {
+    public ResponseEntity<?> uploadFile(@PathVariable Long id, @RequestBody ContractRequestDto requestDto) {
         try {
             System.out.println(requestDto.toString());
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -52,15 +53,19 @@ public class ContractController {
             } else {
                 // 계약이 없는 경우에 대한 로직 처리
                 // ...
-                ReportResponseDto reportResponseDto = contractService.saveContract(requestDto, id, user);
-                return ResponseEntity.ok(reportResponseDto);
+                return contractService.saveContract(requestDto, id, user);
             }
 
             // ContractService를 사용하여 Contract 데이터 저장
 
         } catch (IOException e) {
             // 파일 업로드 실패 시 예외 처리
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            ApiResponse apiResponse = ApiResponse.builder()
+                    .check(true)
+                    .information(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null))
+                    .build();
+
+            return ResponseEntity.ok(apiResponse);
         }
     }
 
