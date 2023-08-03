@@ -32,6 +32,4 @@ public class ContractRequestDto {
     @Schema(description = "보증금")
     private Integer deposit;
 
-    @Schema(description = "계약 이미지")
-    private MultipartFile contract_img;
 }
