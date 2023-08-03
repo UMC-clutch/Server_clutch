@@ -51,7 +51,7 @@ public class ContractController {
             User user = user1.get();
 
             Contract contractEntity = null;
-            contractEntity = contractRepository.findByUser_Id(userId);
+            contractEntity = contractRepository.findByUserId(userId);
 
 
             if (contractEntity != null) {

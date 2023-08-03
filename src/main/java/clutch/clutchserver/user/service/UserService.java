@@ -1,5 +1,7 @@
 package clutch.clutchserver.user.service;
 
+import clutch.clutchserver.calculate.entity.Calculate;
+import clutch.clutchserver.calculate.repository.CalculateRepository;
 import clutch.clutchserver.global.DefaultAssert;
 import clutch.clutchserver.global.common.enums.Reason;
 import clutch.clutchserver.global.payload.ApiResponse;
@@ -25,6 +27,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final WithdrawalRepository withdrawalRepository;
     private final TokenRepository tokenRepository;
+    private final CalculateRepository calculateRepository;
 
     //유저 조회 (조회 기준 - 유저 email)
     public ResponseEntity<?> findUser(String useremail) {
@@ -60,6 +63,10 @@ public class UserService {
         Optional<Token> token = tokenRepository.findByUserId(user.get().getId());
         DefaultAssert.isTrue(token.isPresent(), "유저가 올바르지 않습니다.");
         tokenRepository.delete(token.get());
+
+        // user와 연관된 계산 내역 삭제
+        Calculate findCalculate = calculateRepository.findByUserId(user.get().getId());
+        calculateRepository.delete(findCalculate);
 
         // 탈퇴 사유 등록
         Withdrawal withdrawal = new Withdrawal();

@@ -12,4 +12,5 @@ public interface CalculateRepository extends JpaRepository<Calculate, Long> {
 
     List<Calculate> findAllByUser(User user);
 
+    Calculate findByUserId(Long userId);
 }

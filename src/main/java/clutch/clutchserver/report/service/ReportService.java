@@ -63,8 +63,8 @@ public class ReportService {
 
     public ResponseEntity<?> getCompReport(String useremail) {
         User findUser = userRepository.findByEmail(useremail).get();
-        Contract findContract = findUser.getContract();
-        Report findReport = reportRepository.findByContractId(findContract.getId()).get();
+        Contract findContract = contractRepository.findByUserId(findUser.getId());
+        Report findReport = reportRepository.findByContractId(findContract.getId());
         Building findBuilding = findContract.getBuilding();
 
         ReportResponseDto reportResponseDto = ReportResponseDto.builder()
@@ -98,12 +98,11 @@ public class ReportService {
         // user의 email로 유저 찾기
         User findUser = userRepository.findByEmail(useremail).get();
 
-        // user와 연관된 계약 찾기
-        Contract findContract = findUser.getContract();
+        // userId로 연관된 계약 찾기
+        Contract findContract = contractRepository.findByUserId(findUser.getId());
 
-        // 계약id로 신고id 찾기
-        Long findReportId = reportRepository.findByContractId(findContract.getId()).get().getId();
-        Report findReport = reportRepository.findById(findReportId).get();
+        // 계약id로 신고 내역 찾기
+        Report findReport = reportRepository.findByContractId(findContract.getId());
 
         // report와 연관된 contract 삭제
         contractRepository.delete(findContract);
