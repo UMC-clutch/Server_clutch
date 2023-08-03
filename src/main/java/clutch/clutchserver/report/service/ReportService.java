@@ -26,17 +26,18 @@ public class ReportService {
     public BuildingResponseDto getBuildingResDto(BuildingRequestDto buildingRequestDto){
 
 
-            Building building = buildingService.saveBuilding(buildingRequestDto);
+        Building building = buildingService.saveBuilding(buildingRequestDto);
 
         BuildingResponseDto buildingResponseDto = BuildingResponseDto.builder()
                 .buildingId(building.getBuildingId())
                 .buildingName(building.getBuildingName())
+                .collateralDate(building.getCollateralDate())
                 .address(building.getAddress())
                 .type(building.getType())
                 .build();
 
-            return buildingResponseDto;
-        }
+        return buildingResponseDto;
+    }
 
     public ReportResponseDto getCompReport(String useremail) {
         User findUser = userRepository.findByEmail(useremail).get();
