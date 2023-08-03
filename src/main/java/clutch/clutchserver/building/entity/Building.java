@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @Table(name = "building")
 public class Building {
 
@@ -20,9 +21,14 @@ public class Building {
     @Column(name = "building_id")
     private Long buildingId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id")
-    private Address address;
+    //건물 주소
+    private String address;
+
+    //동
+    private String dong;
+
+    //호
+    private String ho;
 
     //건물명
     private String buildingName;
@@ -46,4 +52,17 @@ public class Building {
 
     //평형 수
     private String area;
+
+    @Builder
+    public Building(Long buildingId, String address, String buildingName, String price, Type type, LocalDateTime collateralDate, LogicType logicType, int collateralMoney, String area) {
+        this.buildingId = buildingId;
+        this.address = address;
+        this.buildingName = buildingName;
+        this.price = price;
+        this.type = type;
+        this.collateralDate = collateralDate;
+        this.logicType = logicType;
+        this.collateralMoney = collateralMoney;
+        this.area = area;
+    }
 }

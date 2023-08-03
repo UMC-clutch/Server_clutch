@@ -53,7 +53,7 @@ public class BuildingService {
         //요청 파라미터 설정(단지 일련번호 조회)
         HashMap<String, Object> parameterMap = new HashMap<String, Object>();
         parameterMap.put("organization", "0004");
-        parameterMap.put("address", building.getAddress().getAddress());
+        parameterMap.put("address", building.getAddress());
 
         //단지 일련번호 조회
         String productUrl = "/v1/kr/etc/ld/kb/serial-number";
@@ -92,9 +92,6 @@ public class BuildingService {
             // "resType1"(평형) 비교문
             if (pyeong.equals(building.getArea())) {
                 price = (String) chosenObject.get("resGeneralPrice");
-//                System.out.println("------------------------------");
-//                System.out.println("generalPrice = " + generalPrice);
-//                System.out.println("------------------------------");
                 break;
             }
         }
@@ -132,19 +129,15 @@ public class BuildingService {
 
         }
 
-        //주소 정보 set
-        address.setAddress(buildingRequestDto.getAddress());
-        address.setDong(buildingRequestDto.getDong());
-        address.setHo(buildingRequestDto.getHo());
-
-        //빌딩 엔티티에 주소 set
-        building.setAddress(address);
+        building.setAddress(buildingRequestDto.getAddress());
+        building.setDong(buildingRequestDto.getDong());
+        building.setHo(buildingRequestDto.getHo());
+        
         System.out.println(building.getClass());
         System.out.println(building.getBuildingId());
 
         //입력받은 건물, 주소 DB에 저장.
         buildingRepository.save(building);
-        addressRepository.save(address);
 
         return building;
     }
@@ -162,16 +155,9 @@ public class BuildingService {
         building.setBuildingName(buildingPriceReq.getBuildingName()); //건물 이름
         building.setType(buildingPriceReq.getType()); //건물 유형
         building.setArea(buildingPriceReq.getArea()); //건물 평형 수
-
-        //주소 정보 set
-        address.setAddress(buildingPriceReq.getAddress());
-        address.setDong(buildingPriceReq.getDong());
-        address.setHo(buildingPriceReq.getHo());
-
-        //빌딩 엔티티에 주소 set
-        building.setAddress(address);
-
-        addressRepository.save(address);
+        building.setAddress(buildingPriceReq.getAddress());
+        building.setDong(building.getDong());
+        building.setHo(building.getHo());
 
         //시세 저장
         building.setPrice(getPrice(building));

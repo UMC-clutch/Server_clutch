@@ -13,25 +13,22 @@ import java.time.LocalDateTime;
 public class BuildingResponseDto {
 
     //건물 id
-    //@Schema(defaultValue = "1")
     private Long buildingId;
 
     //건물 이름
-    //@Schema(defaultValue = "래미안")
     private String buildingName;
 
     //근저당 설정 기준일
-    //@Schema(defaultValue = "2023-07-23....")
     private LocalDateTime collateralDate;
 
     //주소
-    private Address address;
+    private String address;
 
     //건물 유형
     private Type type;
 
     @Builder
-    public BuildingResponseDto(Long buildingId, String buildingName, LocalDateTime collateralDate, Address address, Type type) {
+    public BuildingResponseDto(Long buildingId, String buildingName, LocalDateTime collateralDate, String address, Type type) {
         this.buildingId = buildingId;
         this.buildingName = buildingName;
         this.collateralDate = collateralDate;
