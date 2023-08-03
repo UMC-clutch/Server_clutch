@@ -50,7 +50,7 @@ public class AuthController {
     @GetMapping(value = "/api/auth/token/kakao")
     public JSONObject oauthKakao(@RequestParam(value = "code", required = false) String code) throws Exception {
         log.warn("인가코드 = {}",code);
-        return oAuth2Service.getKakaoAccessToken("http://localhost:8080/api/auth/token/kakao", code);
+        return oAuth2Service.getKakaoAccessToken("https://www.clutch.p-e.kr/api/auth/token/kakao", code);
     }
 
 
