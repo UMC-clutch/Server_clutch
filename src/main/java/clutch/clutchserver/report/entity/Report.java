@@ -28,10 +28,14 @@ public class Report extends BaseDateEntity {
     private boolean hasResistance; // 대항력 여부
     private boolean hasRepayment; // 최우선 변제금 가능여부
 
+    @OneToOne(fetch = FetchType.LAZY,mappedBy = "report")
+    private Contract contract;
+
     @Builder
     public Report(Long id, Contract contract, ReportStatus status, int repayment, boolean hasLowIncome, boolean hasSubmittedContract, boolean hasResistance, boolean hasRepayment) {
         this.id = id;
         this.status = status;
+        this.contract = contract;
         this.repayment = repayment;
         this.hasLowIncome = hasLowIncome;
         this.hasSubmittedContract = hasSubmittedContract;

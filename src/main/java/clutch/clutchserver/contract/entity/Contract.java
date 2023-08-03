@@ -20,6 +20,7 @@ public class Contract extends BaseDateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "contract_id")
     private Long id;
 
     private Boolean has_lived;
