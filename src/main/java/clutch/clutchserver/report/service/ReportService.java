@@ -8,11 +8,14 @@ import clutch.clutchserver.building.service.BuildingService;
 import clutch.clutchserver.contract.entity.Contract;
 import clutch.clutchserver.report.dto.ReportResponseDto;
 import clutch.clutchserver.report.entity.Report;
+import clutch.clutchserver.report.repository.ReportRepository;
 import clutch.clutchserver.user.entity.User;
 import clutch.clutchserver.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -21,6 +24,7 @@ public class ReportService {
 
     private final BuildingService buildingService;
     private final UserRepository userRepository;
+    private final ReportRepository reportRepository;
 
     //건물 정보 입력 반환
     public BuildingResponseDto getBuildingResDto(BuildingRequestDto buildingRequestDto){
@@ -61,6 +65,18 @@ public class ReportService {
                 .has_applied_dividend(findContract.getHas_applied_dividend())
                 .deposit(findContract.getDeposit())
                 .build();
+    }
+
+    @Transactional
+    public void reportDelete(String useremail) {
+
+        User findUser = userRepository.findByEmail(useremail).get();
+
+        Long reportId = findUser.getContract().getReport().getId();
+
+        Optional<Report> findReport = reportRepository.findById(reportId);
+
+        reportRepository.delete(findReport.get());
     }
 }
 
