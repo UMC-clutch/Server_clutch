@@ -119,7 +119,7 @@ public class Oauth2Service {
             // "access_token"이 null이면 오류 처리 또는 원하는 동작 수행
             // 예를 들어, 로그를 남기거나 예외를 던질 수 있습니다.
             // 여기에서는 빈 문자열("")로 처리했습니다.
-            response.put("access_token", "");
+            response.put("access_token", response);
         }
 
         return response;
