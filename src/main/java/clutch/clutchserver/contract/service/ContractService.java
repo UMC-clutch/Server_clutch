@@ -40,7 +40,7 @@ public class ContractService {
 
 
 
-    public ResponseEntity<?> saveContract(ContractRequestDto requestDto, Long buildingId, Optional<User> user) throws IOException {
+    public ResponseEntity<?> saveContract(ContractRequestDto requestDto, Long buildingId, User user) throws IOException {
         // ContractRequestDto에서 필요한 데이터 추출
         Boolean hasLived = requestDto.getHas_lived();
         LocalDate transportReportDate = requestDto.getTransport_report_date();
@@ -65,6 +65,7 @@ public class ContractService {
                 .deposit(deposit)
                 .building(building)
                 // 여기에 필요한 데이터들 추가
+                .user(user)
                 .build();
 
 
@@ -72,12 +73,12 @@ public class ContractService {
         contractRepository.save(contract);
         ReportResponseDto response = createReportResponse(contract, building);
 
-        User userEntity =user.get();
-        if(userEntity.getContract()==null){
-            user.get().updateContract(contract);
-            userRepository.save(userEntity);
-        }
-        reportService.saveReport(userEntity.getId(),contract,building);
+        //User userEntity =user.get();
+        //if(userEntity.getContract()==null){
+        //    user.get().updateContract(contract);
+        //    userRepository.save(userEntity);
+        //}
+        reportService.saveReport(user.getId(),contract,building);
 
         ApiResponse apiResponse = ApiResponse.builder()
                 .check(true)
