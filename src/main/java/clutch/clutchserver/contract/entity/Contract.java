@@ -6,6 +6,7 @@ import clutch.clutchserver.report.entity.Report;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 
@@ -27,7 +28,7 @@ public class Contract extends BaseDateEntity {
     private LocalDateTime confirmation_date;
     private Boolean has_landlord_intervene;
     private Boolean has_applied_dividend;
-    private Integer deposit;
+    private BigInteger deposit;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "building_id")
     private Building building;

@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Getter
@@ -48,7 +49,7 @@ public class ReportResponseDto {
     private Boolean has_applied_dividend; //배당 신청 여부
 
     @Schema(description = "보증금")
-    private int deposit; //보증금
+    private BigInteger deposit; //보증금
 
     @Schema(description = "실거주 여부")
     private Boolean has_lived; //실거주 여부

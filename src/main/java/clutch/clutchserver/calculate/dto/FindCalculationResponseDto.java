@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigInteger;
+
 @Data
 public class FindCalculationResponseDto {
 
@@ -26,16 +28,16 @@ public class FindCalculationResponseDto {
     private String ho;
 
     @Schema(description="근저당액",example="20000000")
-    private int collateralMoney;
+    private BigInteger collateralMoney;
 
     @Schema(description="전세금",example="20000000")
-    private int deposit;
+    private BigInteger deposit;
 
     @Schema(description="위험여부",example= "true")
     private Boolean isDangerous;
 
     @Builder
-    public FindCalculationResponseDto(Long id, Long buildingId, Long addressId, String address, String dong, String ho, int collateralMoney, int deposit, Boolean isDangerous) {
+    public FindCalculationResponseDto(Long id, Long buildingId, Long addressId, String address, String dong, String ho, BigInteger collateralMoney, BigInteger deposit, Boolean isDangerous) {
         this.id = id;
         this.buildingId = buildingId;
         this.addressId = addressId;

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -44,7 +45,7 @@ public class ContractService {
         LocalDateTime confirmationDate = requestDto.getConfirmation_date();
         Boolean hasLandlordIntervene = requestDto.getHas_landlord_intervene();
         Boolean hasAppliedDividend = requestDto.getHas_applied_dividend();
-        Integer deposit = requestDto.getDeposit();
+        BigInteger deposit = requestDto.getDeposit();
 
 
 

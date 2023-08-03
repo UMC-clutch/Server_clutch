@@ -6,6 +6,7 @@ import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Builder
@@ -30,6 +31,6 @@ public class ContractRequestDto {
     private Boolean has_applied_dividend;
 
     @Schema(description = "보증금")
-    private Integer deposit;
+    private BigInteger deposit;
 
 }
