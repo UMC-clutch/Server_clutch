@@ -82,36 +82,62 @@ public class BuildingService {
         JSONObject jsonDetailObject = (JSONObject) jsonResultObject.get("data");
         JSONArray jsonPriceArray = (JSONArray) jsonDetailObject.get("resDetailList");
 
+        // 아파트의 경우 동 호수가 null 값임을 이용해 평형으로 조회할지 동 호수로 조회할지 정함
+        boolean isPyeong = ((JSONObject) jsonPriceArray.get(0)).get("reqDong").equals("");
+
         // 만약 사용자가 자신의 집 평형을 입력하면, 그 정보를 codef api 에서 가져온 데이터들과 비교하여, 해당하는 평형의 시세를 찾는다.
         // 반복문으로 "resType1"(평형) 일치하는지 비교. 그리고 일치하면 매매_일반가(시세) 출력.
         String price = "";
-        for (Object o : jsonPriceArray) {
-            JSONObject chosenObject = (JSONObject) o;
-            String pyeong = (String) chosenObject.get("resType1");
+        if (isPyeong) {
 
-            // "resType1"(평형) 비교문
-            if (pyeong.equals(building.getArea())) {
-                price = (String) chosenObject.get("resGeneralPrice");
+            for (Object o : jsonPriceArray) {
+                JSONObject chosenObject = (JSONObject) o;
+                String pyeong = (String) chosenObject.get("resType1");
+
+                // "resType1"(평형) 비교문
+                if (pyeong.equals(building.getArea())) {
+                    price = (String) chosenObject.get("resGeneralPrice");
 //                System.out.println("------------------------------");
 //                System.out.println("generalPrice = " + generalPrice);
 //                System.out.println("------------------------------");
-                break;
+                    break;
+                }
             }
+
+            return price;
+        } else {
+
+            for (Object o : jsonPriceArray) {
+                JSONObject chosenObject = (JSONObject) o;
+                String dong = (String) chosenObject.get("reqDong");
+                String ho = (String) chosenObject.get("reqHo");
+
+                // "resType1"(평형) 비교문
+                if (dong.equals(building.getAddress().getDong())) {
+                    if (ho.equals(building.getAddress().getHo())) {
+                        price = (String) chosenObject.get("resGeneralPrice");
+//                        System.out.println("------------------------------");
+//                        System.out.println("generalPrice = " + generalPrice);
+//                        System.out.println("------------------------------");
+                        break;
+                    }
+                }
+            }
+
+            return price;
         }
 
-        return price;
     }
 
     //건물, 주소 DB에 저장하기
-    public Building saveBuilding(BuildingRequestDto buildingRequestDto){
+    public Building saveBuilding(BuildingRequestDto buildingRequestDto) {
 
         Building building = new Building();
         Address address = new Address();
 
         //접수 유형
         building.setLogicType(buildingRequestDto.getLogicType());
-        if(buildingRequestDto.getLogicType() == LogicType.REPORT)
-        {
+        if (buildingRequestDto.getLogicType() == LogicType.REPORT) {
             /*
                 빌딩 정보 set
             */
@@ -120,9 +146,7 @@ public class BuildingService {
             building.setType(buildingRequestDto.getType()); //건물 유형
             building.setCollateralDate(buildingRequestDto.getCollateralDate()); //근저당 설정 기준일
 
-        }
-        else if(buildingRequestDto.getLogicType() == LogicType.CALCULATE)
-        {
+        } else if (buildingRequestDto.getLogicType() == LogicType.CALCULATE) {
             /*
                 빌딩 정보 set
              */

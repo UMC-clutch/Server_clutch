@@ -16,11 +16,9 @@ import clutch.clutchserver.report.repository.ReportRepository;
 import clutch.clutchserver.user.entity.User;
 import clutch.clutchserver.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -30,16 +28,17 @@ public class ReportService {
 
     private final BuildingService buildingService;
     private final UserRepository userRepository;
+    private final ReportRepository reportRepository;
+
     private final ImageRepository imageRepository;
 
     private final CalculateDeposit calculateDeposit;
-    private final ReportRepository reportRepository;
 
     //건물 정보 입력 반환
     public BuildingResponseDto getBuildingResDto(BuildingRequestDto buildingRequestDto){
 
 
-            Building building = buildingService.saveBuilding(buildingRequestDto);
+        Building building = buildingService.saveBuilding(buildingRequestDto);
 
         BuildingResponseDto buildingResponseDto = BuildingResponseDto.builder()
                 .buildingId(building.getBuildingId())
@@ -48,8 +47,8 @@ public class ReportService {
                 .type(building.getType())
                 .build();
 
-            return buildingResponseDto;
-        }
+        return buildingResponseDto;
+    }
 
     public ReportResponseDto getCompReport(String useremail) {
         User findUser = userRepository.findByEmail(useremail).get();
@@ -74,6 +73,18 @@ public class ReportService {
                 .has_applied_dividend(findContract.getHas_applied_dividend())
                 .deposit(findContract.getDeposit())
                 .build();
+    }
+
+    @Transactional
+    public void reportDelete(String useremail) {
+
+        User findUser = userRepository.findByEmail(useremail).get();
+
+        Long reportId = findUser.getContract().getReport().getId();
+
+        Optional<Report> findReport = reportRepository.findById(reportId);
+
+        reportRepository.delete(findReport.get());
     }
 
     public void saveReport(Long userId,Contract contract,Building building,Address address) {
@@ -138,6 +149,6 @@ public class ReportService {
     }
 
 
-}
 
+}
 
