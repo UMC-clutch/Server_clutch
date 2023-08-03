@@ -111,8 +111,9 @@ public class ReportService {
 
 
         //user에 image존재?
-        Optional<Image> image = imageRepository.findById(userId);
-        Image imageEntity = image.get();
+        Image imageEntity = null;
+        imageEntity = imageRepository.findById(userId)
+                .orElse(imageEntity = null);
         if(imageEntity!= null){
             has_image = true;
         }else{
