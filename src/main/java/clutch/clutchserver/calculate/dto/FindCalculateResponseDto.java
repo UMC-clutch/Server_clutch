@@ -7,7 +7,7 @@ import lombok.Data;
 import java.math.BigInteger;
 
 @Data
-public class FindCalculationResponseDto {
+public class FindCalculateResponseDto {
 
     @Schema(description="계산 ID",example= "1")
     private Long id;
@@ -43,7 +43,7 @@ public class FindCalculationResponseDto {
     private Boolean isDangerous;
 
     @Builder
-    public FindCalculationResponseDto(Long id, Long buildingId, Long addressId, String buildingName, String address, String dong, String ho, BigInteger price, BigInteger collateralMoney, BigInteger deposit, Boolean isDangerous) {
+    public FindCalculateResponseDto(Long id, Long buildingId, Long addressId, String buildingName, String address, String dong, String ho, BigInteger price, BigInteger collateralMoney, BigInteger deposit, Boolean isDangerous) {
         this.id = id;
         this.buildingId = buildingId;
         this.addressId = addressId;
