@@ -3,6 +3,7 @@ package clutch.clutchserver.contract.entity;
 import clutch.clutchserver.building.entity.Building;
 import clutch.clutchserver.global.common.BaseDateEntity;
 import clutch.clutchserver.report.entity.Report;
+import clutch.clutchserver.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,9 +32,14 @@ public class Contract extends BaseDateEntity {
     private Boolean has_landlord_intervene;
     private Boolean has_applied_dividend;
     private BigInteger deposit;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "building_id")
     private Building building;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }
 
