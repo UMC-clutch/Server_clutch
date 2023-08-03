@@ -6,6 +6,7 @@ import clutch.clutchserver.building.dto.BuildingResponseDto;
 import clutch.clutchserver.building.entity.Building;
 import clutch.clutchserver.building.service.BuildingService;
 import clutch.clutchserver.contract.entity.Contract;
+import clutch.clutchserver.contract.repository.ContractRepository;
 import clutch.clutchserver.global.common.CalculateDeposit;
 import clutch.clutchserver.global.common.enums.ReportStatus;
 import clutch.clutchserver.image.entity.Image;
@@ -33,6 +34,7 @@ public class ReportService {
     private final ImageRepository imageRepository;
 
     private final CalculateDeposit calculateDeposit;
+    private final ContractRepository contractRepository;
 
     //건물 정보 입력 반환
     public BuildingResponseDto getBuildingResDto(BuildingRequestDto buildingRequestDto){
@@ -78,13 +80,19 @@ public class ReportService {
     @Transactional
     public void reportDelete(String useremail) {
 
+        // user의 email로 유저 찾기
         User findUser = userRepository.findByEmail(useremail).get();
 
-        Long reportId = reportRepository.findByContractId(findUser.getContract().getId()).get().getId();
+        // user와 연관된 계약 찾기
+        Contract findContract = findUser.getContract();
 
-        Optional<Report> findReport = reportRepository.findById(reportId);
+        // 계약id로 신고id 찾기
+        Long findReportId = reportRepository.findByContractId(findContract.getId()).get().getId();
+        Report findReport = reportRepository.findById(findReportId).get();
 
-        reportRepository.delete(findReport.get());
+        // report와 연관된 contract 삭제
+        contractRepository.delete(findContract);
+        reportRepository.delete(findReport);
     }
 
     public void saveReport(Long userId,Contract contract,Building building,Address address) {

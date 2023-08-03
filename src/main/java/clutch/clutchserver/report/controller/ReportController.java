@@ -27,7 +27,7 @@ public class ReportController {
 
     private final ReportService reportService;
 
-    @Operation(description = "건물 정보 입력")
+    @Operation(summary = "건물 정보 입력", description = "신고 접수를 하기 위한 건물 저장")
     @SecurityRequirement(name = "access-token")
     @ApiResponses(
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",
@@ -35,7 +35,7 @@ public class ReportController {
                     content = @Content(schema = @Schema(implementation = ReportResponseDto.class))
             )
     )
-    @PostMapping(value = "/v1/report")
+    @PostMapping(value = "/v1/report/building")
     public ResponseEntity<?> receiveReport(@RequestBody BuildingRequestDto buildingRequestDto) {
 
         BuildingResponseDto buildingResponseDto = reportService.getBuildingResDto(buildingRequestDto);
@@ -50,7 +50,7 @@ public class ReportController {
     }
 
     @Operation(summary = "신고 접수 내역 조회", description = "user 토큰으로 신고내역, 계약, 건물 정보 조회")
-    @GetMapping("/v1/report")
+    @GetMapping("/v1/report/comp")
     @SecurityRequirement(name = "access-token")
     public ResponseEntity<?> completedReport() {
         // 현재 토큰을 사용중인 유저 조회
@@ -68,7 +68,7 @@ public class ReportController {
     }
 
     @Operation(summary = "신고 취소", description = "user 토큰으로 신고내역 삭제")
-    @DeleteMapping("/v1/report")
+    @DeleteMapping("/v1/report/delete")
     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully deleted report")
     @SecurityRequirement(name = "access-token")
     public ResponseEntity<?> deleteReport() {
