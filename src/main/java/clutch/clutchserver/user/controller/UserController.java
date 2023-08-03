@@ -15,23 +15,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping("/api")
 @Tag(name = "User", description = "유저와관련된 API")
 public class UserController {
 
     private final UserService userService;
 
     // 회원탈퇴
-    @DeleteMapping("/api/v1/users")
+    @DeleteMapping("/v1/users")
     @Operation(summary = "회원 탈퇴하기")
     @ApiResponse(responseCode = "200", description = "Successfully deleted user")
     @SecurityRequirement(name = "access-token")

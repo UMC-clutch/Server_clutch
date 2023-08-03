@@ -7,6 +7,7 @@ import clutch.clutchserver.contract.dto.ContractRequestDto;
 import clutch.clutchserver.contract.entity.Contract;
 import clutch.clutchserver.contract.repository.ContractRepository;
 import clutch.clutchserver.global.common.enums.ReportStatus;
+import clutch.clutchserver.global.payload.ApiResponse;
 import clutch.clutchserver.image.entity.Image;
 import clutch.clutchserver.image.repository.ImageRepository;
 import clutch.clutchserver.report.dto.ReportResponseDto;
@@ -15,6 +16,7 @@ import clutch.clutchserver.user.entity.User;
 import clutch.clutchserver.user.repository.UserRepository;
 import clutch.clutchserver.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,7 +40,7 @@ public class ContractService {
 
 
 
-    public ReportResponseDto saveContract(ContractRequestDto requestDto, Long buildingId, Optional<User> user) throws IOException {
+    public ResponseEntity<?> saveContract(ContractRequestDto requestDto, Long buildingId, Optional<User> user) throws IOException {
         // ContractRequestDto에서 필요한 데이터 추출
         Boolean hasLived = requestDto.getHas_lived();
         LocalDate transportReportDate = requestDto.getTransport_report_date();
@@ -76,7 +78,13 @@ public class ContractService {
             userRepository.save(userEntity);
         }
         reportService.saveReport(userEntity.getId(),contract,building);
-        return response;
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(response)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     public ReportResponseDto createReportResponse(Contract contract, Building building) throws IOException {

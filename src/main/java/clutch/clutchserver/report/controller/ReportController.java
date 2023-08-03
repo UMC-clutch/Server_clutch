@@ -38,15 +38,7 @@ public class ReportController {
     @PostMapping(value = "/v1/report/building")
     public ResponseEntity<?> receiveReport(@RequestBody BuildingRequestDto buildingRequestDto) {
 
-        BuildingResponseDto buildingResponseDto = reportService.getBuildingResDto(buildingRequestDto);
-
-        ApiResponse apiResponse = ApiResponse.builder()
-                .check(true)
-                .information(buildingResponseDto)
-                .build();
-
-        return ResponseEntity.ok(apiResponse);
-
+        return reportService.getBuildingResDto(buildingRequestDto);
     }
 
     @Operation(summary = "신고 접수 내역 조회", description = "user 토큰으로 신고내역, 계약, 건물 정보 조회")
@@ -57,14 +49,7 @@ public class ReportController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String useremail = authentication.getName();    // 해당 유저의 email 조회(getName()은 이메일 조회 의미)
 
-        ReportResponseDto reportResponseDto = reportService.getCompReport(useremail);
-
-        ApiResponse apiResponse = ApiResponse.builder()
-                .check(true)
-                .information(reportResponseDto)
-                .build();
-
-        return ResponseEntity.ok(apiResponse);
+        return reportService.getCompReport(useremail);
     }
 
     @Operation(summary = "신고 취소", description = "user 토큰으로 신고내역 삭제")
