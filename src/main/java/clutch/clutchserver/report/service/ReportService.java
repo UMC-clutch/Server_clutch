@@ -12,6 +12,7 @@ import clutch.clutchserver.image.entity.Image;
 import clutch.clutchserver.image.repository.ImageRepository;
 import clutch.clutchserver.report.dto.ReportResponseDto;
 import clutch.clutchserver.report.entity.Report;
+import clutch.clutchserver.report.repository.ReportRepository;
 import clutch.clutchserver.user.entity.User;
 import clutch.clutchserver.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class ReportService {
     private final ImageRepository imageRepository;
 
     private final CalculateDeposit calculateDeposit;
+    private final ReportRepository reportRepository;
 
     //건물 정보 입력 반환
     public BuildingResponseDto getBuildingResDto(BuildingRequestDto buildingRequestDto){
@@ -131,6 +133,8 @@ public class ReportService {
                 .status(report_status)
                 .hasSubmittedContract(has_image)
                 .build();
+
+        reportRepository.save(report);
     }
 
 
