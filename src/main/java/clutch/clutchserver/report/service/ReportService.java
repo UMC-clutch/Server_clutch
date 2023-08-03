@@ -53,7 +53,7 @@ public class ReportService {
     public ReportResponseDto getCompReport(String useremail) {
         User findUser = userRepository.findByEmail(useremail).get();
         Contract findContract = findUser.getContract();
-        Report findReport = findContract.getReport();
+        Report findReport = reportRepository.findByContractId(findContract.getId()).get();
         Building findBuilding = findContract.getBuilding();
         Address findAddress = findBuilding.getAddress();
 
@@ -80,7 +80,7 @@ public class ReportService {
 
         User findUser = userRepository.findByEmail(useremail).get();
 
-        Long reportId = findUser.getContract().getReport().getId();
+        Long reportId = reportRepository.findByContractId(findUser.getContract().getId()).get().getId();
 
         Optional<Report> findReport = reportRepository.findById(reportId);
 
@@ -111,8 +111,9 @@ public class ReportService {
 
 
         //user에 image존재?
-        Optional<Image> image = imageRepository.findById(userId);
-        Image imageEntity = image.get();
+        Image imageEntity = null;
+        imageEntity = imageRepository.findById(userId)
+                .orElse(imageEntity = null);
         if(imageEntity!= null){
             has_image = true;
         }else{

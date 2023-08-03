@@ -20,6 +20,7 @@ public class Contract extends BaseDateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "contract_id")
     private Long id;
 
     private Boolean has_lived;
@@ -33,8 +34,5 @@ public class Contract extends BaseDateEntity {
     @JoinColumn(name = "building_id")
     private Building building;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "report_id")
-    private Report report;
 }
 
