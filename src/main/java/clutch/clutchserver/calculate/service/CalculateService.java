@@ -3,10 +3,9 @@ package clutch.clutchserver.calculate.service;
 import clutch.clutchserver.address.entity.Address;
 import clutch.clutchserver.building.entity.Building;
 import clutch.clutchserver.building.repository.BuildingRepository;
-import clutch.clutchserver.building.service.BuildingService;
 import clutch.clutchserver.calculate.dto.CalculateRequestDto;
 import clutch.clutchserver.calculate.dto.CalculateResponseDto;
-import clutch.clutchserver.calculate.dto.FindCalculationResponseDto;
+import clutch.clutchserver.calculate.dto.FindCalculateResponseDto;
 import clutch.clutchserver.calculate.entity.Calculate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +30,7 @@ public class CalculateService {
     private final BuildingRepository buildingRepository;
 
     //사기 위험성 계산
+    @Transactional      // read-only 해제
     public ResponseEntity<?> calculateRisk(String userEmail, CalculateRequestDto calculateReq) {
 
         Optional<User> userOptional = userRepository.findByEmail(userEmail);
@@ -43,10 +43,14 @@ public class CalculateService {
         DefaultAssert.isTrue(buildingOptional.isPresent(), "올바르지 않은 빌딩입니다.");
         building = buildingOptional.get();
 
+        // 근저당액 저장
+        building.setCollateralMoney(calculateReq.getCollateral());
+
         Calculate calculate = Calculate.builder()
                 .building(building)
                 .deposit(calculateReq.getDeposit())
                 .hasDanger(calculateReq.getIsDangerous())
+                .user(user)
                 .build();
 
         calculateRepository.save(calculate);
@@ -55,6 +59,7 @@ public class CalculateService {
                 .id(calculate.getId())
                 .buildingId(calculate.getBuilding().getBuildingId())
                 .deposit(calculate.getDeposit())
+                .collateral(calculate.getBuilding().getCollateralMoney())
                 .isDangerous(calculate.isHasDanger())
                 .build();
 
@@ -74,17 +79,19 @@ public class CalculateService {
 
         List<Calculate> calculateList = calculateRepository.findAllByUser(user);
 
-        List<FindCalculationResponseDto> calculationResList = calculateList.stream().map(calculate -> {
+        List<FindCalculateResponseDto> calculationResList = calculateList.stream().map(calculate -> {
             Building building = calculate.getBuilding();
             Address address = building.getAddress();
 
-            return FindCalculationResponseDto.builder()
+            return FindCalculateResponseDto.builder()
                     .id(calculate.getId())
                     .buildingId(building.getBuildingId())
                     .addressId(address.getAddressId())
+                    .buildingName(building.getBuildingName())
                     .address(address.getAddress())
                     .dong(address.getDong())
                     .ho(address.getHo())
+                    .price(building.getPrice())
                     .collateralMoney(building.getCollateralMoney())
                     .deposit(calculate.getDeposit())
                     .isDangerous(calculate.isHasDanger())
@@ -111,13 +118,15 @@ public class CalculateService {
         Building building = calculate.getBuilding();
         Address address = building.getAddress();
 
-        FindCalculationResponseDto calculationRes = FindCalculationResponseDto.builder()
+        FindCalculateResponseDto calculationRes = FindCalculateResponseDto.builder()
                 .id(calculate.getId())
                 .buildingId(building.getBuildingId())
                 .addressId(address.getAddressId())
+                .buildingName(building.getBuildingName())
                 .address(address.getAddress())
                 .dong(address.getDong())
                 .ho(address.getHo())
+                .price(building.getPrice())
                 .collateralMoney(building.getCollateralMoney())
                 .deposit(calculate.getDeposit())
                 .isDangerous(calculate.isHasDanger())
