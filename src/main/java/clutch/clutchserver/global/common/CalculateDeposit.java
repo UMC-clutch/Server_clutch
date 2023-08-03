@@ -4,12 +4,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Component
 public class CalculateDeposit {
 
-    public int calculate(BigInteger deposit, String address, LocalDateTime confirmDate) {
+    public int calculate(BigInteger deposit, String address, LocalDate confirmDate) {
         // Your existing logic to calculate the deposit based on the provided parameters.
         // You can continue the implementation of this method here.
         // ...
@@ -19,10 +20,10 @@ public class CalculateDeposit {
         int firstPayment = 0;
 
 
-        LocalDateTime date1 = LocalDateTime.of(2022, 2, 14, 0, 0);
-        LocalDateTime date2 = LocalDateTime.of(2021, 5, 11, 0, 0);
-        LocalDateTime date3 = LocalDateTime.of(2018, 9, 18, 0, 0);
-        LocalDateTime date4 = LocalDateTime.of(2016, 3, 31, 0, 0);
+        LocalDate date1 = LocalDate.of(2022, 2, 14);
+        LocalDate date2 = LocalDate.of(2021, 5, 11);
+        LocalDate date3 = LocalDate.of(2018, 9, 18);
+        LocalDate date4 = LocalDate.of(2016, 3, 31);
 
         boolean has_smallLease=false;
 

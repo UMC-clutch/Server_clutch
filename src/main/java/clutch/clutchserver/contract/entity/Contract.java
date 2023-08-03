@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -25,8 +26,8 @@ public class Contract extends BaseDateEntity {
 
     private Boolean has_lived;
 
-    private LocalDateTime transport_report_date;
-    private LocalDateTime confirmation_date;
+    private LocalDate transport_report_date;
+    private LocalDate confirmation_date;
     private Boolean has_landlord_intervene;
     private Boolean has_applied_dividend;
     private BigInteger deposit;

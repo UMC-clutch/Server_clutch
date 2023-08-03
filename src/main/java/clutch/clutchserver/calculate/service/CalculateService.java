@@ -1,6 +1,5 @@
 package clutch.clutchserver.calculate.service;
 
-import clutch.clutchserver.address.entity.Address;
 import clutch.clutchserver.building.entity.Building;
 import clutch.clutchserver.building.repository.BuildingRepository;
 import clutch.clutchserver.calculate.dto.CalculateRequestDto;
@@ -81,16 +80,14 @@ public class CalculateService {
 
         List<FindCalculateResponseDto> calculationResList = calculateList.stream().map(calculate -> {
             Building building = calculate.getBuilding();
-            Address address = building.getAddress();
 
             return FindCalculateResponseDto.builder()
                     .id(calculate.getId())
                     .buildingId(building.getBuildingId())
-                    .addressId(address.getAddressId())
                     .buildingName(building.getBuildingName())
-                    .address(address.getAddress())
-                    .dong(address.getDong())
-                    .ho(address.getHo())
+                    .address(building.getAddress())
+                    .dong(building.getDong())
+                    .ho(building.getHo())
                     .price(building.getPrice())
                     .collateralMoney(building.getCollateralMoney())
                     .deposit(calculate.getDeposit())
@@ -116,16 +113,14 @@ public class CalculateService {
         Calculate calculate = calculateOptional.get();
 
         Building building = calculate.getBuilding();
-        Address address = building.getAddress();
 
         FindCalculateResponseDto calculationRes = FindCalculateResponseDto.builder()
                 .id(calculate.getId())
                 .buildingId(building.getBuildingId())
-                .addressId(address.getAddressId())
                 .buildingName(building.getBuildingName())
-                .address(address.getAddress())
-                .dong(address.getDong())
-                .ho(address.getHo())
+                .address(building.getAddress())
+                .dong(building.getDong())
+                .ho(building.getHo())
                 .price(building.getPrice())
                 .collateralMoney(building.getCollateralMoney())
                 .deposit(calculate.getDeposit())
