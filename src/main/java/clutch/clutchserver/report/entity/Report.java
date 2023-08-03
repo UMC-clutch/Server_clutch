@@ -28,7 +28,10 @@ public class Report extends BaseDateEntity {
     private boolean hasResistance; // 대항력 여부
     private boolean hasRepayment; // 최우선 변제금 가능여부
 
-    @OneToOne(fetch = FetchType.LAZY,mappedBy = "report")
+
+
+    @OneToOne
+    @JoinColumn(name = "contract_id")
     private Contract contract;
 
     @Builder
