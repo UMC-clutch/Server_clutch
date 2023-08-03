@@ -33,8 +33,5 @@ public class Contract extends BaseDateEntity {
     @JoinColumn(name = "building_id")
     private Building building;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "report_id")
-    private Report report;
 }
 
