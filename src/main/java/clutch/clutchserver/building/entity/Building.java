@@ -6,7 +6,6 @@ import clutch.clutchserver.global.common.enums.Type;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Entity
@@ -29,7 +28,7 @@ public class Building {
     private String buildingName;
 
     //건물 시세
-    private BigInteger price;
+    private String price;
 
     //건물 유형
     @Enumerated(EnumType.STRING)
@@ -43,7 +42,7 @@ public class Building {
     private LogicType logicType;
 
     //근저당액
-    private BigInteger collateralMoney;
+    private int collateralMoney;
 
     //평형 수
     private String area;
