@@ -5,7 +5,7 @@ import clutch.clutchserver.global.common.enums.Reason;
 import clutch.clutchserver.global.payload.ApiResponse;
 import clutch.clutchserver.token.entity.Token;
 import clutch.clutchserver.token.repository.TokenRepository;
-import clutch.clutchserver.user.dto.UserRes;
+import clutch.clutchserver.user.dto.FindUserResponseDto;
 import clutch.clutchserver.user.entity.User;
 import clutch.clutchserver.user.repository.UserRepository;
 import clutch.clutchserver.withdrawal.entity.Withdrawal;
@@ -32,7 +32,7 @@ public class UserService {
         Optional<User> user = userRepository.findByEmail(useremail);
         DefaultAssert.isTrue(user.isPresent(), "유저가 올바르지 않습니다.");
 
-        UserRes userRes = UserRes.builder()
+        FindUserResponseDto findUserRes = FindUserResponseDto.builder()
                 .id(user.get().getId())
                 .email(user.get().getEmail())
                 .name(user.get().getName())
@@ -41,7 +41,7 @@ public class UserService {
 
         ApiResponse apiResponse = ApiResponse.builder()
                 .check(true)
-                .information(userRes)
+                .information(findUserRes)
                 .build();
 
         return ResponseEntity.ok(apiResponse);

@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class FindCalculationResponseDto {
+public class FindCalculateResponseDto {
 
     @Schema(description="계산 ID",example= "1")
     private Long id;
@@ -35,7 +35,11 @@ public class FindCalculationResponseDto {
     private Boolean isDangerous;
 
     @Builder
+<<<<<<< HEAD:src/main/java/clutch/clutchserver/calculate/dto/FindCalculationResponseDto.java
     public FindCalculationResponseDto(Long id, Long buildingId, Long addressId, String address, String dong, String ho, int collateralMoney, int deposit, Boolean isDangerous) {
+=======
+    public FindCalculateResponseDto(Long id, Long buildingId, Long addressId, String buildingName, String address, String dong, String ho, BigInteger price, BigInteger collateralMoney, BigInteger deposit, Boolean isDangerous) {
+>>>>>>> 4fc5db61bc792814542780709d24c8478d4948d2:src/main/java/clutch/clutchserver/calculate/dto/FindCalculateResponseDto.java
         this.id = id;
         this.buildingId = buildingId;
         this.addressId = addressId;

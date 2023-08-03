@@ -87,7 +87,11 @@ public class BuildingService {
 
         // 만약 사용자가 자신의 집 평형을 입력하면, 그 정보를 codef api 에서 가져온 데이터들과 비교하여, 해당하는 평형의 시세를 찾는다.
         // 반복문으로 "resType1"(평형) 일치하는지 비교. 그리고 일치하면 매매_일반가(시세) 출력.
+<<<<<<< HEAD
         String price = "";
+=======
+        BigInteger price = BigInteger.valueOf(0);
+>>>>>>> 4fc5db61bc792814542780709d24c8478d4948d2
         if (isPyeong) {
 
             for (Object o : jsonPriceArray) {
@@ -96,13 +100,18 @@ public class BuildingService {
 
                 // "resType1"(평형) 비교문
                 if (pyeong.equals(building.getArea())) {
+<<<<<<< HEAD
                     price = (String) chosenObject.get("resGeneralPrice");
+=======
+                    price = new BigInteger((String) chosenObject.get("resGeneralPrice"));
+>>>>>>> 4fc5db61bc792814542780709d24c8478d4948d2
 //                System.out.println("------------------------------");
 //                System.out.println("generalPrice = " + generalPrice);
 //                System.out.println("------------------------------");
                     break;
                 }
             }
+<<<<<<< HEAD
 
             return price;
         } else {
@@ -127,6 +136,30 @@ public class BuildingService {
             return price;
         }
 
+=======
+
+            return price;
+        } else {
+            for (Object o : jsonPriceArray) {
+                JSONObject chosenObject = (JSONObject) o;
+                String dong = (String) chosenObject.get("reqDong");
+                String ho = (String) chosenObject.get("reqHo");
+
+                // "resType1"(평형) 비교문
+                if (dong.equals(building.getAddress().getDong())) {
+                    if (ho.equals(building.getAddress().getHo())) {
+                        price = new BigInteger((String) chosenObject.get("resGeneralPrice"));
+            //      System.out.println("------------------------------");
+            //      System.out.println("generalPrice = " + generalPrice);
+            //      System.out.println("------------------------------");
+                        break;
+                    }
+                }
+            }
+
+            return price;
+        }
+>>>>>>> 4fc5db61bc792814542780709d24c8478d4948d2
     }
 
     //건물, 주소 DB에 저장하기

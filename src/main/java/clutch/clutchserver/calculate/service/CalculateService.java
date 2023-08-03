@@ -3,10 +3,9 @@ package clutch.clutchserver.calculate.service;
 import clutch.clutchserver.address.entity.Address;
 import clutch.clutchserver.building.entity.Building;
 import clutch.clutchserver.building.repository.BuildingRepository;
-import clutch.clutchserver.building.service.BuildingService;
 import clutch.clutchserver.calculate.dto.CalculateRequestDto;
 import clutch.clutchserver.calculate.dto.CalculateResponseDto;
-import clutch.clutchserver.calculate.dto.FindCalculationResponseDto;
+import clutch.clutchserver.calculate.dto.FindCalculateResponseDto;
 import clutch.clutchserver.calculate.entity.Calculate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -74,11 +73,11 @@ public class CalculateService {
 
         List<Calculate> calculateList = calculateRepository.findAllByUser(user);
 
-        List<FindCalculationResponseDto> calculationResList = calculateList.stream().map(calculate -> {
+        List<FindCalculateResponseDto> calculationResList = calculateList.stream().map(calculate -> {
             Building building = calculate.getBuilding();
             Address address = building.getAddress();
 
-            return FindCalculationResponseDto.builder()
+            return FindCalculateResponseDto.builder()
                     .id(calculate.getId())
                     .buildingId(building.getBuildingId())
                     .addressId(address.getAddressId())
@@ -111,7 +110,7 @@ public class CalculateService {
         Building building = calculate.getBuilding();
         Address address = building.getAddress();
 
-        FindCalculationResponseDto calculationRes = FindCalculationResponseDto.builder()
+        FindCalculateResponseDto calculationRes = FindCalculateResponseDto.builder()
                 .id(calculate.getId())
                 .buildingId(building.getBuildingId())
                 .addressId(address.getAddressId())
