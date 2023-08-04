@@ -6,11 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CalculateRepository extends JpaRepository<Calculate, Long> {
 
     List<Calculate> findAllByUser(User user);
 
-    Calculate findByUserId(Long userId);
+    Optional<Calculate> findByUserId(Long userId);
 }
