@@ -13,10 +13,14 @@ import clutch.clutchserver.user.repository.UserRepository;
 import clutch.clutchserver.withdrawal.entity.Withdrawal;
 import clutch.clutchserver.withdrawal.repository.WithdrawalRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -76,4 +80,21 @@ public class UserService {
         withdrawalRepository.save(withdrawal);
     }
 
+    @Transactional
+    public ResponseEntity<Map<String, String>> updatePhone(User user, String phonenumber){
+        // 사용자 정보를 업데이트합니다.
+        try {
+            System.out.println(user.getEmail());
+            user.updatePhoneNum(phonenumber);
+            userRepository.save(user);
+            // 업데이트된 전화번호를 JSON 형태로 포함한 응답 생성
+            Map<String, String> response = new HashMap<>();
+            response.put("phonenumber", phonenumber);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            // 예외 처리 (생략)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "저장 중 오류가 발생했습니다."));
+        }
+    }
 }

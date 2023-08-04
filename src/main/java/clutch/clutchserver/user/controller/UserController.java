@@ -20,7 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -68,7 +68,7 @@ public class UserController {
     @SecurityRequirement(name="access-token")
     @Operation(summary = "전화번호 추가", description = "유저의 전화번호를 저장합니다")
     @ApiResponse(responseCode = "200", description = "Successful Operation")
-    public ResponseEntity<String> addPhoneNumber(@RequestBody PhoneNumberRequestDto request) {
+    public ResponseEntity<Map<String, String>> addPhoneNumber(@RequestBody PhoneNumberRequestDto request) {
         // 요청에서 전화번호를 가져옵니다.
         String phoneNumber = request.getPhonenumber();
 
@@ -77,16 +77,6 @@ public class UserController {
 
         User user = userRepository.findByEmail(useremail).orElse(null);
 
-        // 유효성 검사를 진행 (생략)
-
-        // 사용자 정보를 업데이트합니다.
-        try {
-           user.updatePhoneNum(phoneNumber);
-            return ResponseEntity.ok("전화번호가 성공적으로 업데이트되었습니다.");
-        } catch (Exception e) {
-            // 예외 처리 (생략)
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("전화번호 업데이트 중 오류가 발생하였습니다.");
-        }
+        return userService.updatePhone(user,phoneNumber);
     }
 }

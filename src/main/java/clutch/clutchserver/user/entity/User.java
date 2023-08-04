@@ -33,6 +33,7 @@ public class User extends BaseDateEntity {
     private Role role;
 
     @Nullable
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     public void updatePhoneNum(String phoneNumber) {
