@@ -2,6 +2,9 @@ package clutch.clutchserver.user.controller;
 
 import clutch.clutchserver.global.common.enums.Reason;
 import clutch.clutchserver.user.dto.FindUserResponseDto;
+import clutch.clutchserver.user.dto.PhoneNumberRequestDto;
+import clutch.clutchserver.user.entity.User;
+import clutch.clutchserver.user.repository.UserRepository;
 import clutch.clutchserver.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,7 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +30,7 @@ import java.util.Objects;
 public class UserController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
     // 회원탈퇴
     @DeleteMapping("/v1/users")
@@ -58,5 +62,21 @@ public class UserController {
         String useremail = authentication.getName();    // 해당 유저의 email 조회(getName()은 이메일 조회 의미)
 
         return userService.findUser(useremail);
+    }
+
+    @PostMapping("/v1/phone-number")
+    @SecurityRequirement(name="access-token")
+    @Operation(summary = "전화번호 추가", description = "유저의 전화번호를 저장합니다")
+    @ApiResponse(responseCode = "200", description = "Successful Operation")
+    public ResponseEntity<Map<String, String>> addPhoneNumber(@RequestBody PhoneNumberRequestDto request) {
+        // 요청에서 전화번호를 가져옵니다.
+        String phoneNumber = request.getPhonenumber();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String useremail = authentication.getName();
+
+        User user = userRepository.findByEmail(useremail).orElse(null);
+
+        return userService.updatePhone(user,phoneNumber);
     }
 }
