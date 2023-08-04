@@ -4,8 +4,10 @@ package clutch.clutchserver.contract.controller;
 import clutch.clutchserver.contract.S3.S3Service;
 import clutch.clutchserver.contract.dto.ContractRequestDto;
 import clutch.clutchserver.contract.entity.Contract;
+import clutch.clutchserver.contract.repository.ContractRepository;
 import clutch.clutchserver.contract.service.ContractService;
 import clutch.clutchserver.global.payload.ApiResponse;
+import clutch.clutchserver.image.entity.Image;
 import clutch.clutchserver.report.dto.ReportResponseDto;
 import clutch.clutchserver.user.entity.User;
 import clutch.clutchserver.user.repository.UserRepository;
@@ -34,6 +36,7 @@ public class ContractController {
     private final S3Service s3Service;
 
     private final UserRepository userRepository;
+    private final ContractRepository contractRepository;
 
     @PostMapping("/contract/{id}")
     @SecurityRequirement(name = "access-token")
@@ -43,10 +46,15 @@ public class ContractController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String useremail = authentication.getName();
 
-            Optional<User> user =userRepository.findByEmail(useremail);
-            Contract contract = user.get().getContract();
+            Optional<User> user1 =userRepository.findByEmail(useremail);
+            Long userId = user1.get().getId();
+            User user = user1.get();
 
-            if (contract != null) {
+            Contract contractEntity = null;
+            contractEntity = contractRepository.findByUserId(userId);
+
+
+            if (contractEntity != null) {
                 // 이미 계약이 있는 경우에 대한 로직 처리
                 // ...
                 throw new ResponseStatusException(HttpStatus.CONFLICT, "계약이 이미 존재합니다.");
