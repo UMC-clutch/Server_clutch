@@ -35,15 +35,6 @@ public class User extends BaseDateEntity {
     @Nullable
     private String phoneNumber;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "contract_id")
-    private Contract contract;
-
-
-    // 업데이트 메서드
-    public void updateContract(Contract contract) {
-            this.contract =contract;
-    }
     public void updatePhoneNum(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
