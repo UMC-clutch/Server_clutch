@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.math.BigInteger;
+
 @Getter
 public class BuildingPriceResponseDto {
 
@@ -13,7 +15,7 @@ public class BuildingPriceResponseDto {
     private Long buildingId;
 
     @Schema(description="건물 시세",example= "10000000")
-    private String price;
+    private BigInteger price;
 
     @Schema(description="건물명",example= "커피빈 상수역점")
     private String buildingName;
@@ -37,7 +39,7 @@ public class BuildingPriceResponseDto {
     private String area;
 
     @Builder
-    public BuildingPriceResponseDto(Long buildingId, String price, String buildingName, String address, String dong, String ho, LogicType logicType, Type type, String area) {
+    public BuildingPriceResponseDto(Long buildingId, BigInteger price, String buildingName, String address, String dong, String ho, LogicType logicType, Type type, String area) {
         this.buildingId = buildingId;
         this.price = price;
         this.buildingName = buildingName;

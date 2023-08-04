@@ -1,7 +1,5 @@
 package clutch.clutchserver.building.service;
 
-import clutch.clutchserver.address.entity.Address;
-import clutch.clutchserver.address.repository.AddressRepository;
 import clutch.clutchserver.building.dto.BuildingPriceRequestDto;
 import clutch.clutchserver.building.dto.BuildingPriceResponseDto;
 import clutch.clutchserver.building.dto.BuildingRequestDto;
@@ -26,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -37,11 +36,10 @@ public class BuildingService {
 
     private final UserRepository userRepository;
     private final BuildingRepository buildingRepository;
-    private final AddressRepository addressRepository;
 
 
     //건물 시세 구하기
-    public String getPrice(Building building) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException, ParseException {
+    public BigInteger getPrice(Building building) throws UnsupportedEncodingException, JsonProcessingException, InterruptedException, ParseException {
 
         //시세 codef api 이용해서 가져오기
         EasyCodef easyCodef = new EasyCodef();
@@ -53,7 +51,7 @@ public class BuildingService {
         //요청 파라미터 설정(단지 일련번호 조회)
         HashMap<String, Object> parameterMap = new HashMap<String, Object>();
         parameterMap.put("organization", "0004");
-        parameterMap.put("address", building.getAddress().getAddress());
+        parameterMap.put("address", building.getAddress());
 
         //단지 일련번호 조회
         String productUrl = "/v1/kr/etc/ld/kb/serial-number";
@@ -82,36 +80,61 @@ public class BuildingService {
         JSONObject jsonDetailObject = (JSONObject) jsonResultObject.get("data");
         JSONArray jsonPriceArray = (JSONArray) jsonDetailObject.get("resDetailList");
 
+        // 아파트의 경우 동 호수가 null 값임을 이용해 평형으로 조회할지 동 호수로 조회할지 정함
+        boolean isPyeong = ((JSONObject) jsonPriceArray.get(0)).get("reqDong").equals("");
+
         // 만약 사용자가 자신의 집 평형을 입력하면, 그 정보를 codef api 에서 가져온 데이터들과 비교하여, 해당하는 평형의 시세를 찾는다.
         // 반복문으로 "resType1"(평형) 일치하는지 비교. 그리고 일치하면 매매_일반가(시세) 출력.
-        String price = "";
-        for (Object o : jsonPriceArray) {
-            JSONObject chosenObject = (JSONObject) o;
-            String pyeong = (String) chosenObject.get("resType1");
+        BigInteger price = BigInteger.valueOf(0);
+        if (isPyeong) {
 
-            // "resType1"(평형) 비교문
-            if (pyeong.equals(building.getArea())) {
-                price = (String) chosenObject.get("resGeneralPrice");
+            for (Object o : jsonPriceArray) {
+                JSONObject chosenObject = (JSONObject) o;
+                String pyeong = (String) chosenObject.get("resType1");
+
+                // "resType1"(평형) 비교문
+                if (pyeong.equals(building.getArea())) {
+                    price = new BigInteger((String) chosenObject.get("resGeneralPrice"));
 //                System.out.println("------------------------------");
 //                System.out.println("generalPrice = " + generalPrice);
 //                System.out.println("------------------------------");
-                break;
+                    break;
+                }
             }
+
+            return price;
+        } else {
+
+            for (Object o : jsonPriceArray) {
+                JSONObject chosenObject = (JSONObject) o;
+                String dong = (String) chosenObject.get("reqDong");
+                String ho = (String) chosenObject.get("reqHo");
+
+                // "resType1"(평형) 비교문
+                if (dong.equals(building.getDong())) {
+                    if (ho.equals(building.getHo())) {
+                        price = new BigInteger((String) chosenObject.get("resGeneralPrice"));
+//                        System.out.println("------------------------------");
+//                        System.out.println("generalPrice = " + generalPrice);
+//                        System.out.println("------------------------------");
+                        break;
+                    }
+                }
+            }
+
+            return price;
         }
 
-        return price;
     }
 
     //건물, 주소 DB에 저장하기
-    public Building saveBuilding(BuildingRequestDto buildingRequestDto){
+    public Building saveBuilding(BuildingRequestDto buildingRequestDto) {
 
         Building building = new Building();
-        Address address = new Address();
 
         //접수 유형
         building.setLogicType(buildingRequestDto.getLogicType());
-        if(buildingRequestDto.getLogicType() == LogicType.REPORT)
-        {
+        if (buildingRequestDto.getLogicType() == LogicType.REPORT) {
             /*
                 빌딩 정보 set
             */
@@ -120,9 +143,7 @@ public class BuildingService {
             building.setType(buildingRequestDto.getType()); //건물 유형
             building.setCollateralDate(buildingRequestDto.getCollateralDate()); //근저당 설정 기준일
 
-        }
-        else if(buildingRequestDto.getLogicType() == LogicType.CALCULATE)
-        {
+        } else if (buildingRequestDto.getLogicType() == LogicType.CALCULATE) {
             /*
                 빌딩 정보 set
              */
@@ -133,18 +154,16 @@ public class BuildingService {
         }
 
         //주소 정보 set
-        address.setAddress(buildingRequestDto.getAddress());
-        address.setDong(buildingRequestDto.getDong());
-        address.setHo(buildingRequestDto.getHo());
+        building.setAddress(buildingRequestDto.getAddress());
+        building.setDong(buildingRequestDto.getDong());
+        building.setHo(buildingRequestDto.getHo());
 
         //빌딩 엔티티에 주소 set
-        building.setAddress(address);
         System.out.println(building.getClass());
         System.out.println(building.getBuildingId());
 
         //입력받은 건물, 주소 DB에 저장.
         buildingRepository.save(building);
-        addressRepository.save(address);
 
         return building;
     }
@@ -155,7 +174,6 @@ public class BuildingService {
         DefaultAssert.isTrue(userOptional.isPresent(), "유저가 올바르지 않습니다.");
 
         Building building = new Building();
-        Address address = new Address();
 
         //접수 유형
         building.setLogicType(LogicType.CALCULATE);
@@ -164,14 +182,9 @@ public class BuildingService {
         building.setArea(buildingPriceReq.getArea()); //건물 평형 수
 
         //주소 정보 set
-        address.setAddress(buildingPriceReq.getAddress());
-        address.setDong(buildingPriceReq.getDong());
-        address.setHo(buildingPriceReq.getHo());
-
-        //빌딩 엔티티에 주소 set
-        building.setAddress(address);
-
-        addressRepository.save(address);
+        building.setAddress(buildingPriceReq.getAddress());
+        building.setDong(buildingPriceReq.getDong());
+        building.setHo(buildingPriceReq.getHo());
 
         //시세 저장
         building.setPrice(getPrice(building));
@@ -181,9 +194,9 @@ public class BuildingService {
         BuildingPriceResponseDto buildingPriceRes = BuildingPriceResponseDto.builder()
                 .buildingName(building.getBuildingName())
                 .buildingId(building.getBuildingId())
-                .address(address.getAddress())
-                .ho(address.getHo())
-                .dong(address.getDong())
+                .address(building.getAddress())
+                .ho(building.getHo())
+                .dong(building.getDong())
                 .type(building.getType())
                 .area(building.getArea())
                 .logicType(building.getLogicType())

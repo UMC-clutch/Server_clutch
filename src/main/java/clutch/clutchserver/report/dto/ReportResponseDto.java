@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -27,7 +29,7 @@ public class ReportResponseDto {
     private String buildingName; //건물 이름
 
     @Schema(description = "근저당 설정 기준일", defaultValue = "20230723")
-    private LocalDateTime collateralDate; //근저당 설정 기준일
+    private LocalDate collateralDate; //근저당 설정 기준일
 
     @Schema(description = "지번 주소", defaultValue = "서울특별시 OO구 OO동 123-4")
     private String address; //지번 주소
@@ -48,14 +50,14 @@ public class ReportResponseDto {
     private Boolean has_applied_dividend; //배당 신청 여부
 
     @Schema(description = "보증금")
-    private int deposit; //보증금
+    private BigInteger deposit; //보증금
 
     @Schema(description = "실거주 여부")
     private Boolean has_lived; //실거주 여부
 
     @Schema(description = "전입 신고 날짜")
-    private LocalDateTime transport_report_date; //전입 신고 날짜
+    private LocalDate transport_report_date; //전입 신고 날짜
 
     @Schema(description = "확정 일자")
-    private LocalDateTime confirmation_date; //확정 일자
+    private LocalDate confirmation_date; //확정 일자
 }

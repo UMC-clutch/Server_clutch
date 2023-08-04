@@ -6,6 +6,8 @@ import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
@@ -17,11 +19,11 @@ public class ContractRequestDto {
 
     @Schema(description = "운송 보고 날짜")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime transport_report_date;
+    private LocalDate transport_report_date;
 
     @Schema(description = "확인 날짜")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime confirmation_date;
+    private LocalDate confirmation_date;
 
     @Schema(description = "집주인 개입 여부")
     private Boolean has_landlord_intervene;
@@ -30,8 +32,6 @@ public class ContractRequestDto {
     private Boolean has_applied_dividend;
 
     @Schema(description = "보증금")
-    private Integer deposit;
+    private BigInteger deposit;
 
-    @Schema(description = "계약 이미지")
-    private MultipartFile contract_img;
 }

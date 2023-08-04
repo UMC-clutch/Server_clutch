@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class UserRes {
+public class FindUserResponseDto {
 
     private Long id;
 
@@ -15,7 +15,7 @@ public class UserRes {
     private String phonenumber;
 
     @Builder
-    public UserRes(Long id, String name, String email, String phonenumber) {
+    public FindUserResponseDto(Long id, String name, String email, String phonenumber) {
         this.id = id;
         this.name = name;
         this.email = email;

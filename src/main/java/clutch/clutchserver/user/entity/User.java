@@ -33,9 +33,12 @@ public class User extends BaseDateEntity {
     private Role role;
 
     @Nullable
+    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "contract_id")
-    private Contract contract;
+    public void updatePhoneNum(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+
 }
