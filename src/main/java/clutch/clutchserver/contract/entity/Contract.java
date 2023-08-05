@@ -32,6 +32,7 @@ public class Contract extends BaseDateEntity {
     private Boolean has_applied_dividend;
     private BigInteger deposit;
     @ManyToOne(fetch = FetchType.LAZY)
+
     @JoinColumn(name = "building_id")
     private Building building;
 

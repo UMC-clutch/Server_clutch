@@ -26,9 +26,6 @@ public class BuildingRequestDto {
     //근저당 설정 기준일
     private LocalDate collateralDate;
 
-    // 접수 유형
-    private LogicType logicType;
-
     // 건물 유형
     private Type type;
 
