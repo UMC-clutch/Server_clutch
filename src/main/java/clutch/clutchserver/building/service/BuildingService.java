@@ -161,42 +161,73 @@ public class BuildingService {
         Optional<User> userOptional = userRepository.findByEmail(userEmail);
         DefaultAssert.isTrue(userOptional.isPresent(), "유저가 올바르지 않습니다.");
 
-        Building building = new Building();
+        // db 에 저장되어 있는 건물들과 주소, 동, 호수, 평형 비교해서 가져오기.
+        Optional<Building> buildingOptional = buildingRepository.findByAddressAndDongAndHoAndArea(
+                buildingPriceReq.getAddress(),
+                buildingPriceReq.getDong(),
+                buildingPriceReq.getHo(),
+                buildingPriceReq.getArea()
+        );
 
-        //접수 유형
-        building.setLogicType(LogicType.CALCULATE);
-        building.setBuildingName(getBuildingName(buildingPriceReq.getAddress())); //건물 이름
-        building.setType(buildingPriceReq.getType()); //건물 유형
-        building.setArea(buildingPriceReq.getArea()); //건물 평형 수
+        if(buildingOptional.isPresent()){
 
-        //주소 정보 set
-        building.setAddress(buildingPriceReq.getAddress());
-        building.setDong(buildingPriceReq.getDong());
-        building.setHo(buildingPriceReq.getHo());
+            Building building = buildingOptional.get();
 
-        //시세 저장
-        building.setPrice(getPrice(building));
+            BuildingPriceResponseDto buildingPriceRes = BuildingPriceResponseDto.builder()
+                    .buildingName(building.getBuildingName())
+                    .buildingId(building.getBuildingId())
+                    .address(building.getAddress())
+                    .ho(building.getHo())
+                    .dong(building.getDong())
+                    .type(building.getType())
+                    .area(building.getArea())
+                    .price(building.getPrice())
+                    .build();
 
-        buildingRepository.save(building);
+            ApiResponse apiResponse = ApiResponse.builder()
+                    .check(true)
+                    .information(buildingPriceRes)
+                    .build();
 
-        BuildingPriceResponseDto buildingPriceRes = BuildingPriceResponseDto.builder()
-                .buildingName(building.getBuildingName())
-                .buildingId(building.getBuildingId())
-                .address(building.getAddress())
-                .ho(building.getHo())
-                .dong(building.getDong())
-                .type(building.getType())
-                .area(building.getArea())
-                .logicType(building.getLogicType())
-                .price(building.getPrice())
-                .build();
+            return ResponseEntity.ok(apiResponse);
+        }
+        else {
+            Building building = new Building();
 
-        ApiResponse apiResponse = ApiResponse.builder()
-                .check(true)
-                .information(buildingPriceRes)
-                .build();
+            //접수 유형
+            building.setBuildingName(getBuildingName(buildingPriceReq.getAddress())); //건물 이름
+            building.setType(buildingPriceReq.getType()); //건물 유형
+            building.setArea(buildingPriceReq.getArea()); //건물 평형 수
 
-        return ResponseEntity.ok(apiResponse);
+            //주소 정보 set
+            building.setAddress(buildingPriceReq.getAddress());
+            building.setDong(buildingPriceReq.getDong());
+            building.setHo(buildingPriceReq.getHo());
+
+            //시세 저장
+            building.setPrice(getPrice(building));
+
+            buildingRepository.save(building);
+
+            BuildingPriceResponseDto buildingPriceRes = BuildingPriceResponseDto.builder()
+                    .buildingName(building.getBuildingName())
+                    .buildingId(building.getBuildingId())
+                    .address(building.getAddress())
+                    .ho(building.getHo())
+                    .dong(building.getDong())
+                    .type(building.getType())
+                    .area(building.getArea())
+                    .price(building.getPrice())
+                    .build();
+
+            ApiResponse apiResponse = ApiResponse.builder()
+                    .check(true)
+                    .information(buildingPriceRes)
+                    .build();
+
+            return ResponseEntity.ok(apiResponse);
+        }
+
     }
 
 }

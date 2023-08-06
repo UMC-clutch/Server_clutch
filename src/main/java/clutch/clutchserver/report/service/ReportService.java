@@ -86,20 +86,18 @@ public class ReportService {
         else{
             Building building = new Building();
 
-            //접수 유형
-            building.setLogicType(LogicType.REPORT);
-
             // codef api 에서 가져온 정확한 건물 이름으로 저장.
             building.setBuildingName(buildingService.getBuildingName(buildingRequestDto.getAddress()));
 
             building.setType(buildingRequestDto.getType()); //건물 유형
             building.setArea(buildingRequestDto.getArea()); //건물 평형 수
-            building.setPrice(buildingService.getPrice(building)); // 시세 가져와서 저장.
 
             //주소 정보 set
             building.setAddress(buildingRequestDto.getAddress());
             building.setDong(buildingRequestDto.getDong());
             building.setHo(buildingRequestDto.getHo());
+
+            building.setPrice(buildingService.getPrice(building)); // 시세 가져와서 저장.
 
             //새로운 건물이므로 db 에 저장.
             buildingRepository.save(building);
@@ -110,7 +108,7 @@ public class ReportService {
                     .address(building.getAddress())
                     .dong(building.getDong())
                     .ho(building.getHo())
-                    .collateralDate(building.getCollateralDate())
+                    .collateralDate(buildingRequestDto.getCollateralDate())
                     .type(building.getType())
                     .build();
 

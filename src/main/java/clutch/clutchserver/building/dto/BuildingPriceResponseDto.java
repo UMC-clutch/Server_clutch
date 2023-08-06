@@ -29,9 +29,6 @@ public class BuildingPriceResponseDto {
     @Schema(description="호",example= "101호")
     private String ho;
 
-    @Schema(description="접수 유형",example= "CALCULATE")
-    private LogicType logicType;
-
     @Schema(description="건물 유형",example= "APARTMENT")
     private Type type;
 
@@ -39,14 +36,13 @@ public class BuildingPriceResponseDto {
     private String area;
 
     @Builder
-    public BuildingPriceResponseDto(Long buildingId, BigInteger price, String buildingName, String address, String dong, String ho, LogicType logicType, Type type, String area) {
+    public BuildingPriceResponseDto(Long buildingId, BigInteger price, String buildingName, String address, String dong, String ho, Type type, String area) {
         this.buildingId = buildingId;
         this.price = price;
         this.buildingName = buildingName;
         this.address = address;
         this.dong = dong;
         this.ho = ho;
-        this.logicType = logicType;
         this.type = type;
         this.area = area;
     }
