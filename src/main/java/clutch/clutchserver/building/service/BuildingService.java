@@ -6,7 +6,6 @@ import clutch.clutchserver.building.dto.BuildingRequestDto;
 import clutch.clutchserver.building.entity.Building;
 import clutch.clutchserver.building.repository.BuildingRepository;
 import clutch.clutchserver.global.DefaultAssert;
-import clutch.clutchserver.global.common.enums.LogicType;
 import clutch.clutchserver.global.payload.ApiResponse;
 import clutch.clutchserver.user.entity.User;
 import clutch.clutchserver.user.repository.UserRepository;
