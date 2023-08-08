@@ -1,6 +1,7 @@
 package clutch.clutchserver.building.dto;
 
 import clutch.clutchserver.global.common.enums.Type;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,28 +13,25 @@ import java.time.LocalDateTime;
 @Setter
 public class BuildingResponseDto {
 
-    //건물 id
-    //@Schema(defaultValue = "1")
+    @Schema(description="건물 ID",example= "1")
     private Long buildingId;
 
-    //건물 이름
-    //@Schema(defaultValue = "래미안")
+    @Schema(description="건물 이름",example= "서서울삼성")
     private String buildingName;
 
-    //지번 주소
+    @Schema(description="지번 주소",example= "서울특별시 마포구 아현동 692")
     private String address;
 
-    //동
+    @Schema(description="동",example= "101")
     private String dong;
 
-    //호
+    @Schema(description="호",example= "101")
     private String ho;
 
-    //근저당 설정 기준일
-    //@Schema(defaultValue = "2023-07-23....")
+    @Schema(description="빌딩 ID",example= "2023-08-01T07:30:51.181Z")
     private LocalDate collateralDate;
 
-    //건물 유형
+    @Schema(description="빌딩 ID",example= "APARTMENT")
     private Type type;
 
     @Builder
