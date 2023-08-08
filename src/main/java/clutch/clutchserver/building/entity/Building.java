@@ -1,6 +1,5 @@
 package clutch.clutchserver.building.entity;
 
-import clutch.clutchserver.global.common.enums.LogicType;
 import clutch.clutchserver.global.common.enums.Type;
 import jakarta.persistence.*;
 import lombok.*;
@@ -42,10 +41,6 @@ public class Building {
 
     //근저당 설정 기준일
     private LocalDate collateralDate;
-
-    //접수 유형(속성)
-    @Enumerated(EnumType.STRING)
-    private LogicType logicType;
 
     //근저당액
     private BigInteger collateralMoney;

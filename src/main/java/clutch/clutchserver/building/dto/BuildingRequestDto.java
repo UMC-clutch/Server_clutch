@@ -1,6 +1,5 @@
 package clutch.clutchserver.building.dto;
 
-import clutch.clutchserver.global.common.enums.LogicType;
 import clutch.clutchserver.global.common.enums.Type;
 import lombok.*;
 

@@ -8,7 +8,6 @@ import clutch.clutchserver.building.service.BuildingService;
 import clutch.clutchserver.contract.entity.Contract;
 import clutch.clutchserver.contract.repository.ContractRepository;
 import clutch.clutchserver.global.common.CalculateDeposit;
-import clutch.clutchserver.global.common.enums.LogicType;
 import clutch.clutchserver.global.common.enums.ReportStatus;
 import clutch.clutchserver.global.payload.ApiResponse;
 import clutch.clutchserver.image.entity.Image;
