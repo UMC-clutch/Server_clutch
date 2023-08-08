@@ -1,6 +1,7 @@
 package clutch.clutchserver.contract.controller;
 
 
+import clutch.clutchserver.building.dto.BuildingPriceResponseDto;
 import clutch.clutchserver.contract.S3.S3Service;
 import clutch.clutchserver.contract.dto.ContractRequestDto;
 import clutch.clutchserver.contract.entity.Contract;
@@ -11,6 +12,9 @@ import clutch.clutchserver.image.entity.Image;
 import clutch.clutchserver.report.dto.ReportResponseDto;
 import clutch.clutchserver.user.entity.User;
 import clutch.clutchserver.user.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +42,10 @@ public class ContractController {
     private final UserRepository userRepository;
     private final ContractRepository contractRepository;
 
+    @Operation(summary = "계약 생성", description = "계약에 대한 정보를 입력합니다.")
     @PostMapping("/contract/{id}")
     @SecurityRequirement(name = "access-token")
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successful Operation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReportResponseDto.class)))
     public ResponseEntity<?> uploadFile(@PathVariable Long id, @RequestBody ContractRequestDto requestDto) {
         try {
             System.out.println(requestDto.toString());
@@ -77,6 +83,7 @@ public class ContractController {
         }
     }
 
+    @Operation(summary = "계약서 이미지", description = "계약서 이미지들을 넣습니다.")
     @PostMapping("/contract/image/{buildingId}")
     public ResponseEntity<String> uploadImage(@PathVariable Long buildingId, @RequestParam("file") MultipartFile file) {
         try {
