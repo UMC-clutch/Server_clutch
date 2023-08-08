@@ -11,6 +11,7 @@ import clutch.clutchserver.image.entity.Image;
 import clutch.clutchserver.report.dto.ReportResponseDto;
 import clutch.clutchserver.user.entity.User;
 import clutch.clutchserver.user.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class ContractController {
     private final UserRepository userRepository;
     private final ContractRepository contractRepository;
 
+    @Operation(description="계약 데이터와 이미지를 함께 업로드합니다. 데이터는 하나의 FormData로 전송되며 이미지를 제외한 계약 데이터는 JSON 객체로 바꿔서 전달해주세요.")
     @PostMapping(value="/contract/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @SecurityRequirement(name = "access-token")
     public ResponseEntity<?> uploadFile(@PathVariable Long id, @RequestPart ContractRequestDto requestDto,
