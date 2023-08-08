@@ -15,9 +15,6 @@ public class FindCalculateResponseDto {
     @Schema(description="빌딩 ID",example="1")
     private Long buildingId;
 
-    @Schema(description="주소 ID",example="1")
-    private Long addressId;
-
     @Schema(description="빌딩 이름",example="서서울삼성")
     private String buildingName;
 
@@ -43,10 +40,9 @@ public class FindCalculateResponseDto {
     private Boolean isDangerous;
 
     @Builder
-    public FindCalculateResponseDto(Long id, Long buildingId, Long addressId, String buildingName, String address, String dong, String ho, BigInteger price, BigInteger collateralMoney, BigInteger deposit, Boolean isDangerous) {
+    public FindCalculateResponseDto(Long id, Long buildingId, String buildingName, String address, String dong, String ho, BigInteger price, BigInteger collateralMoney, BigInteger deposit, Boolean isDangerous) {
         this.id = id;
         this.buildingId = buildingId;
-        this.addressId = addressId;
         this.buildingName = buildingName;
         this.address = address;
         this.dong = dong;

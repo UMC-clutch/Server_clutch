@@ -12,4 +12,6 @@ public interface BuildingRepository extends JpaRepository<Building, Integer> {
 
     Optional<Building> findByBuildingId(Long buildingId);
 
+    // 주소, 동, 호, 평형 모두 비교해서 같은 건물이면 db 에서 가져옴.
+    Optional<Building> findByAddressAndDongAndHoAndArea(String address, String dong, String ho, String area);
 }
