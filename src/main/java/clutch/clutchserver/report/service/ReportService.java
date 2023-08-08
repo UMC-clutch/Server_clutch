@@ -21,6 +21,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.parser.ParseException;
 import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -126,8 +127,23 @@ public class ReportService {
 
     public ResponseEntity<?> getCompReport(String useremail) {
         User findUser = userRepository.findByEmail(useremail).get();
-        Contract findContract = contractRepository.findByUserId(findUser.getId());
-        Report findReport = reportRepository.findByContractId(findContract.getId());
+
+        Optional<Contract> findContractOptional = contractRepository.findByUserId(findUser.getId());
+        Contract findContract;
+        if (findContractOptional.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            findContract = findContractOptional.get();
+        }
+
+        Optional<Report> findReportOptional = reportRepository.findByContractId(findContract.getId());
+        Report findReport;
+        if (findReportOptional.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            findReport = findReportOptional.get();
+        }
+
         Building findBuilding = findContract.getBuilding();
 
         ReportResponseDto reportResponseDto = ReportResponseDto.builder()
@@ -162,10 +178,10 @@ public class ReportService {
         User findUser = userRepository.findByEmail(useremail).get();
 
         // userId로 연관된 계약 찾기
-        Contract findContract = contractRepository.findByUserId(findUser.getId());
+        Contract findContract = contractRepository.findByUserId(findUser.getId()).get();
 
         // 계약id로 신고 내역 찾기
-        Report findReport = reportRepository.findByContractId(findContract.getId());
+        Report findReport = reportRepository.findByContractId(findContract.getId()).get();
 
         // report와 연관된 contract 삭제
         contractRepository.delete(findContract);
