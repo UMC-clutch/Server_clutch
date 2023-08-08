@@ -2,6 +2,7 @@ package clutch.clutchserver.building.dto;
 
 import clutch.clutchserver.global.common.enums.LogicType;
 import clutch.clutchserver.global.common.enums.Type;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -11,28 +12,28 @@ import java.time.LocalDateTime;
 @Setter
 public class BuildingRequestDto {
 
-    //건물명
+    @Schema(description = "건물명", example = "서서울삼성")
     private String buildingName;
 
-    //지번 주소
+    @Schema(description = "지번주소", example = "서울특별시 마포구 아현동 692")
     private String address;
 
-    //동
+    @Schema(description = "동", example = "101")
     private String dong;
 
-    //호
+    @Schema(description = "호", example = "101")
     private String ho;
 
-    //근저당 설정 기준일
+    @Schema(description = "근저당 설정 기준일", example = "2023-08-01T07:30:51.181Z")
     private LocalDate collateralDate;
 
-    // 접수 유형
+    @Schema(description = "접수 유형", example = "REPORT")
     private LogicType logicType;
 
-    // 건물 유형
+    @Schema(description = "건물 유형", example = "APARTMENT")
     private Type type;
 
-    // 평형 수
+    @Schema(description = "평형 수", example = "64")
     private String area;
 
 }

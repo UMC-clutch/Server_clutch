@@ -1,6 +1,7 @@
 package clutch.clutchserver.user.controller;
 
 import clutch.clutchserver.global.common.enums.Reason;
+import clutch.clutchserver.report.dto.ReportResponseDto;
 import clutch.clutchserver.user.dto.FindUserResponseDto;
 import clutch.clutchserver.user.dto.PhoneNumberRequestDto;
 import clutch.clutchserver.user.entity.User;
