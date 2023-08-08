@@ -6,7 +6,6 @@ import clutch.clutchserver.calculate.dto.CalculateRequestDto;
 import clutch.clutchserver.calculate.dto.CalculateResponseDto;
 import clutch.clutchserver.calculate.dto.FindCalculateResponseDto;
 import clutch.clutchserver.calculate.entity.Calculate;
-import clutch.clutchserver.global.common.enums.LogicType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,9 +41,6 @@ public class CalculateService {
         Building building;
         DefaultAssert.isTrue(buildingOptional.isPresent(), "올바르지 않은 빌딩입니다.");
         building = buildingOptional.get();
-
-        // 빌딩의 타입이 CALCULATE인지 확인
-        DefaultAssert.isTrue(building.getLogicType().equals(LogicType.CALCULATE),"위험성 계산을 위한 빌딩이 아닙니다.");
 
         // 근저당액 저장
         building.setCollateralMoney(calculateReq.getCollateral());
