@@ -5,6 +5,7 @@ import clutch.clutchserver.building.dto.BuildingResponseDto;
 import clutch.clutchserver.global.payload.ApiResponse;
 import clutch.clutchserver.report.dto.ReportResponseDto;
 import clutch.clutchserver.report.service.ReportService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,11 +13,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.parser.ParseException;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.UnsupportedEncodingException;
 
 
 @RestController
@@ -36,7 +40,7 @@ public class ReportController {
             )
     )
     @PostMapping(value = "/v1/report/building")
-    public ResponseEntity<?> receiveReport(@RequestBody BuildingRequestDto buildingRequestDto) {
+    public ResponseEntity<?> receiveReport(@RequestBody BuildingRequestDto buildingRequestDto) throws UnsupportedEncodingException, ParseException, JsonProcessingException, InterruptedException {
 
         return reportService.getBuildingResDto(buildingRequestDto);
     }
