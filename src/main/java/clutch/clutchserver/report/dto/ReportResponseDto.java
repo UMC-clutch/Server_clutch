@@ -44,20 +44,20 @@ public class ReportResponseDto {
     private Type buildingType; //건물 유형
 
     @Schema(description = "채권 개입 여부")
-    private Boolean has_landlord_intervene; //채권 개입 여부
+    private Boolean hasLandlordIntervene; //채권 개입 여부
 
     @Schema(description = "배당 신청 여부")
-    private Boolean has_applied_dividend; //배당 신청 여부
+    private Boolean hasAppliedDividend; //배당 신청 여부
 
     @Schema(description = "보증금")
     private BigInteger deposit; //보증금
 
     @Schema(description = "실거주 여부")
-    private Boolean has_lived; //실거주 여부
+    private Boolean hasLived; //실거주 여부
 
     @Schema(description = "전입 신고 날짜")
-    private LocalDate transport_report_date; //전입 신고 날짜
+    private LocalDate transportReportDate; //전입 신고 날짜
 
     @Schema(description = "확정 일자")
-    private LocalDate confirmation_date; //확정 일자
+    private LocalDate confirmationDate; //확정 일자
 }
