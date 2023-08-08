@@ -1,18 +1,21 @@
 package clutch.clutchserver.contract.dto;
 
+import clutch.clutchserver.image.entity.Image;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @Getter
-public class ContractRequestDto {
+public class ContractRequestDto{
 
     @Schema(description = "거주 여부", example = "true")
     private Boolean has_lived;
@@ -33,5 +36,4 @@ public class ContractRequestDto {
 
     @Schema(description = "보증금", example = "5000000000")
     private BigInteger deposit;
-
 }

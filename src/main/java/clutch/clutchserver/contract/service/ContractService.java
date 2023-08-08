@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -40,7 +41,7 @@ public class ContractService {
 
 
 
-    public ResponseEntity<?> saveContract(ContractRequestDto requestDto, Long buildingId, User user) throws IOException {
+    public ResponseEntity<?> saveContract(ContractRequestDto requestDto, Long buildingId, User user, List<String> imageList) throws IOException {
         // ContractRequestDto에서 필요한 데이터 추출
         Boolean hasLived = requestDto.getHas_lived();
         LocalDate transportReportDate = requestDto.getTransport_report_date();
@@ -72,6 +73,7 @@ public class ContractService {
         // Contract 엔티티를 ContractRepository를 사용하여 저장
         contractRepository.save(contract);
         ReportResponseDto response = createReportResponse(contract, building);
+        System.out.println(imageList);
 
         //User userEntity =user.get();
         //if(userEntity.getContract()==null){
