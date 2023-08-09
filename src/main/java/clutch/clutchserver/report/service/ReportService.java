@@ -128,10 +128,12 @@ public class ReportService {
     public ResponseEntity<?> getCompReport(String useremail) {
         User findUser = userRepository.findByEmail(useremail).get();
 
+        ApiResponse nullResponse = ApiResponse.builder().check(true).build();
+
         Optional<Contract> findContractOptional = contractRepository.findByUserId(findUser.getId());
         Contract findContract;
         if (findContractOptional.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.ok(nullResponse);
         } else {
             findContract = findContractOptional.get();
         }
@@ -139,7 +141,7 @@ public class ReportService {
         Optional<Report> findReportOptional = reportRepository.findByContractId(findContract.getId());
         Report findReport;
         if (findReportOptional.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.ok(nullResponse);
         } else {
             findReport = findReportOptional.get();
         }
