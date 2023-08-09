@@ -26,9 +26,6 @@ public class BuildingRequestDto {
     @Schema(description = "근저당 설정 기준일", example = "2023-08-01T07:30:51.181Z")
     private LocalDate collateralDate;
 
-    @Schema(description = "접수 유형", example = "REPORT")
-    private LogicType logicType;
-
     @Schema(description = "건물 유형", example = "APARTMENT")
     private Type type;
 

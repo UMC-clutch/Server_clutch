@@ -42,9 +42,9 @@ public class ContractController {
     private final ContractRepository contractRepository;
 
     @Operation(description="계약 데이터와 이미지를 함께 업로드합니다. 데이터는 하나의 FormData로 전송되며 이미지를 제외한 계약 데이터는 JSON 객체로 바꿔서 전달해주세요.")
-    @PostMapping(value="/contract/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value="/contract/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @SecurityRequirement(name = "access-token")
-    public ResponseEntity<?> uploadFile(@PathVariable Long id, @RequestPart ContractRequestDto requestDto,
+    public ResponseEntity<?> uploadFile(@PathVariable Long id, @RequestPart("requestDto") ContractRequestDto requestDto,
                                         @RequestPart("files") MultipartFile[] files) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
