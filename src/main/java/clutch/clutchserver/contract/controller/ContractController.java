@@ -52,7 +52,7 @@ public class ContractController {
             Optional<User> user1 = userRepository.findByEmail(useremail);
             Long userId = user1.get().getId();
             User user = user1.get();
-            System.out.println(requestDto.getHas_lived());
+            System.out.println(requestDto.getHasLived());
 
 
 
