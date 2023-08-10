@@ -14,7 +14,6 @@ import clutch.clutchserver.report.dto.ReportResponseDto;
 import clutch.clutchserver.report.service.ReportService;
 import clutch.clutchserver.user.entity.User;
 import clutch.clutchserver.user.repository.UserRepository;
-import clutch.clutchserver.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -36,21 +35,18 @@ public class ContractService {
 
     private final ImageRepository imageRepository;
     private final ReportService reportService;
-    private final UserService userService;
     private final UserRepository userRepository;
 
 
 
     public ResponseEntity<?> saveContract(ContractRequestDto requestDto, Long buildingId, User user, List<String> imageList) throws IOException {
         // ContractRequestDto에서 필요한 데이터 추출
-        Boolean hasLived = requestDto.getHas_lived();
-        LocalDate transportReportDate = requestDto.getTransport_report_date();
-        LocalDate confirmationDate = requestDto.getConfirmation_date();
-        Boolean hasLandlordIntervene = requestDto.getHas_landlord_intervene();
-        Boolean hasAppliedDividend = requestDto.getHas_applied_dividend();
-        BigInteger deposit = requestDto.getDeposit();
-
-
+        Boolean reqHasLived = requestDto.getHasLived();
+        LocalDate reqTransportReportDate = requestDto.getTransportReportDate();
+        LocalDate reqConfirmationDate = requestDto.getConfirmationDate();
+        Boolean reqHasLandlordIntervene = requestDto.getHasLandlordIntervene();
+        Boolean reqHasAppliedDividend = requestDto.getHasAppliedDividend();
+        BigInteger reqDeposit = requestDto.getDeposit();
 
         Optional<Building> buildingOptional = buildingRepository.findByBuildingId(buildingId);
         Building building = buildingOptional.orElseThrow(() -> new IllegalArgumentException("Invalid building ID"));
@@ -58,12 +54,12 @@ public class ContractService {
 
         // Contract 엔티티로 변환하여 데이터 저장
         Contract contract = Contract.builder()
-                .has_lived(hasLived)
-                .transport_report_date(transportReportDate)
-                .confirmation_date(confirmationDate)
-                .has_landlord_intervene(hasLandlordIntervene)
-                .has_applied_dividend(hasAppliedDividend)
-                .deposit(deposit)
+                .hasLived(reqHasLived)
+                .transportReportDate(reqTransportReportDate)
+                .confirmationDate(reqConfirmationDate)
+                .hasLandlordIntervene(reqHasLandlordIntervene)
+                .hasAppliedDividend(reqHasAppliedDividend)
+                .deposit(reqDeposit)
                 .building(building)
                 // 여기에 필요한 데이터들 추가
                 .user(user)
@@ -102,12 +98,12 @@ public class ContractService {
                 .dong(building != null ? building.getDong() : null)
                 .ho(building != null ? building.getHo() : null)
                 .buildingType(building != null ? building.getType() : null)
-                .has_landlord_intervene(contract.getHas_landlord_intervene())
-                .has_applied_dividend(contract.getHas_applied_dividend())
+                .hasLandlordIntervene(contract.getHasLandlordIntervene())
+                .hasAppliedDividend(contract.getHasAppliedDividend())
                 .deposit(contract.getDeposit())
-                .has_lived(contract.getHas_lived())
-                .transport_report_date(contract.getTransport_report_date())
-                .confirmation_date(contract.getConfirmation_date())
+                .hasLived(contract.getHasLived())
+                .transportReportDate(contract.getTransportReportDate())
+                .confirmationDate(contract.getConfirmationDate())
                 .build();
 
         return reportResponseDto;
