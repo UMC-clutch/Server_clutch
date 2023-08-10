@@ -64,7 +64,7 @@ public class ContractController {
             }
 
             // 계약 데이터 저장 로직
-            Contract contractEntity = contractRepository.findByUserId(userId);
+            Contract contractEntity = contractRepository.findByUserId(userId).get();
             if (contractEntity != null) {
                 throw new ResponseStatusException(HttpStatus.CONFLICT, "계약이 이미 존재합니다.");
             } else {
