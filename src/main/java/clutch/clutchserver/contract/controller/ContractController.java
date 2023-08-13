@@ -52,6 +52,7 @@ public class ContractController {
             Optional<User> user1 = userRepository.findByEmail(useremail);
             Long userId = user1.get().getId();
             User user = user1.get();
+            System.out.println(user);
             System.out.println(requestDto.getHasLived());
 
 
@@ -59,27 +60,33 @@ public class ContractController {
             // 파일 업로드 로직
             List<String> imageUrls = new ArrayList<>();
             for (MultipartFile file : files) {
+                System.out.println("check1");
                 String imageUrl = contractService.uploadImage(id, file, userId);
                 imageUrls.add(imageUrl);
             }
 
             // 계약 데이터 저장 로직
             Contract contractEntity = contractRepository.findByUserId(userId).get();
+            Boolean checking = contractEntity != null;
+            System.out.println(checking);
             if (contractEntity != null) {
                 throw new ResponseStatusException(HttpStatus.CONFLICT, "계약이 이미 존재합니다.");
             } else {
                 // ContractService를 사용하여 Contract 데이터 저장
                 contractService.saveContract(requestDto, id, user,imageUrls);
+                System.out.println("check");
                 // 이미지 URL들을 contractEntity에 추
                 //contractRepository.save(contractEntity);
             }
 
             return ResponseEntity.ok("Contract data and images saved successfully!");
         } catch (IOException e) {
+
             ApiResponse apiResponse = ApiResponse.builder()
                     .check(true)
                     .information(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null))
                     .build();
+            System.out.println(apiResponse);
 
             return ResponseEntity.ok(apiResponse);
         }

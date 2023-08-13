@@ -50,7 +50,7 @@ public class ContractService {
 
         Optional<Building> buildingOptional = buildingRepository.findByBuildingId(buildingId);
         Building building = buildingOptional.orElseThrow(() -> new IllegalArgumentException("Invalid building ID"));
-        System.out.println(building.getAddress());
+        System.out.println(buildingOptional.get());
 
         // Contract 엔티티로 변환하여 데이터 저장
         Contract contract = Contract.builder()
@@ -116,6 +116,7 @@ public class ContractService {
         // Building 엔티티 가져오기
         Building building = buildingRepository.findByBuildingId(buildingId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid building ID"));
+        System.out.println(building.getAddress());
 
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid building ID"));
 
@@ -127,6 +128,7 @@ public class ContractService {
 
         // Image 엔티티를 저장
         imageRepository.save(image);
+        System.out.println(imageUrl);
 
         // 업로드된 이미지 URL 반환
         return imageUrl;
