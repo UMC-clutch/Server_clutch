@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
-    Optional<Report> findByContractId(Long contractId);
+    Report findByContractId(Long contractId);
 }

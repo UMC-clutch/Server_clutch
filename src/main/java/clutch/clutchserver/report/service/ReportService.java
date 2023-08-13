@@ -7,7 +7,6 @@ import clutch.clutchserver.building.repository.BuildingRepository;
 import clutch.clutchserver.building.service.BuildingService;
 import clutch.clutchserver.contract.entity.Contract;
 import clutch.clutchserver.contract.repository.ContractRepository;
-import clutch.clutchserver.global.DefaultAssert;
 import clutch.clutchserver.global.common.CalculateDeposit;
 import clutch.clutchserver.global.common.enums.ReportStatus;
 import clutch.clutchserver.global.payload.ApiResponse;
@@ -21,11 +20,13 @@ import clutch.clutchserver.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.parser.ParseException;
+import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.util.Optional;
 
 
@@ -126,20 +127,8 @@ public class ReportService {
 
     public ResponseEntity<?> getCompReport(String useremail) {
         User findUser = userRepository.findByEmail(useremail).get();
-
-        // 계약이 없으면 check를 true, 빈 information 반환
-        Optional<Contract> contractOptional = contractRepository.findByUserId(findUser.getId());
-        if (contractOptional.isEmpty()) {
-            ApiResponse apiResponse = ApiResponse.builder().check(true).build();
-            return ResponseEntity.ok(apiResponse);
-        }
-        Contract findContract = contractOptional.get();
-
-        // 계약은 있으나 신고 접수가 되지 않았을 때는 check를 실패로 반환
-        Optional<Report> reportOptional = reportRepository.findByContractId(findContract.getId());
-        DefaultAssert.isTrue(reportOptional.isPresent(), "계약은 있으나 신고접수가 생성되지 않았습니다.");
-        Report findReport = reportOptional.get();
-
+        Contract findContract = contractRepository.findByUserId(findUser.getId());
+        Report findReport = reportRepository.findByContractId(findContract.getId());
         Building findBuilding = findContract.getBuilding();
 
         ReportResponseDto reportResponseDto = ReportResponseDto.builder()
@@ -174,10 +163,10 @@ public class ReportService {
         User findUser = userRepository.findByEmail(useremail).get();
 
         // userId로 연관된 계약 찾기
-        Contract findContract = contractRepository.findByUserId(findUser.getId()).get();
+        Contract findContract = contractRepository.findByUserId(findUser.getId());
 
         // 계약id로 신고 내역 찾기
-        Report findReport = reportRepository.findByContractId(findContract.getId()).get();
+        Report findReport = reportRepository.findByContractId(findContract.getId());
 
         // report와 연관된 contract 삭제
         contractRepository.delete(findContract);
