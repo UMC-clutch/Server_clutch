@@ -20,13 +20,11 @@ import clutch.clutchserver.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.parser.ParseException;
-import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
 import java.util.Optional;
 
 
@@ -128,6 +126,14 @@ public class ReportService {
     public ResponseEntity<?> getCompReport(String useremail) {
         User findUser = userRepository.findByEmail(useremail).get();
         Contract findContract = contractRepository.findByUserId(findUser.getId());
+
+        if (findContract == null) {
+            ApiResponse apiResponse = ApiResponse.builder()
+                    .check(false)
+                    .information(null)
+                    .build();
+            return ResponseEntity.ok(apiResponse);
+        }
         Report findReport = reportRepository.findByContractId(findContract.getId());
         Building findBuilding = findContract.getBuilding();
 
@@ -157,13 +163,20 @@ public class ReportService {
     }
 
     @Transactional
-    public void reportDelete(String useremail) {
+    public ResponseEntity<ApiResponse> reportDelete(String useremail) {
 
         // user의 email로 유저 찾기
         User findUser = userRepository.findByEmail(useremail).get();
 
         // userId로 연관된 계약 찾기
         Contract findContract = contractRepository.findByUserId(findUser.getId());
+        if (findContract == null) {
+            ApiResponse apiResponse = ApiResponse.builder()
+                    .check(false)
+                    .information(null)
+                    .build();
+            return ResponseEntity.ok(apiResponse);
+        }
 
         // 계약id로 신고 내역 찾기
         Report findReport = reportRepository.findByContractId(findContract.getId());
@@ -171,6 +184,11 @@ public class ReportService {
         // report와 연관된 contract 삭제
         contractRepository.delete(findContract);
         reportRepository.delete(findReport);
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information("contract deleted")
+                .build();
+        return ResponseEntity.ok(apiResponse);
     }
 
     public void saveReport(Long userId, Contract contract, Building building) {

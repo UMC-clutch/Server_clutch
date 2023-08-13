@@ -71,12 +71,12 @@ public class ReportController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String useremail = authentication.getName();    // 해당 유저의 email 조회(getName()은 이메일 조회 의미)
 
-        reportService.reportDelete(useremail);
+        //reportService.reportDelete(useremail);
 
-        ApiResponse apiResponse = ApiResponse.builder()
-                .check(true)
-                .build();
+        //ApiResponse apiResponse = ApiResponse.builder()
+                //.check(true)
+                //.build();
 
-        return ResponseEntity.ok(apiResponse);
+        return reportService.reportDelete(useremail);
     }
 }
