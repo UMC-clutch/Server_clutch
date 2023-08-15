@@ -1,5 +1,7 @@
 package clutch.clutchserver.global.oauth.controller;
 
+import clutch.clutchserver.global.dto.AppleUserDto;
+import clutch.clutchserver.global.dto.KakaoUserDto;
 import clutch.clutchserver.global.jwt.JwtTokenProvider;
 import clutch.clutchserver.global.oauth.service.Oauth2Service;
 import clutch.clutchserver.global.oauth.service.SecurityService;
@@ -30,6 +32,23 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
     private final SecurityService securityService;
 
+    @PostMapping("/api/login/apple")
+    @Operation(summary = "Apple Login")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(description ="{user:testuser,userId:sdjahkfhkjdhsjafhksd,phonenumber:010-1234-1234,email:email@email.com}")
+    public ResponseEntity<UserResponseDto.TokenInfo> getAppleToken(@RequestBody AppleUserDto appleUserDto) throws Exception{
+        User appleInfo = oAuth2Service.getAppleInfo(appleUserDto);
+        UserResponseDto.TokenInfo tokenDTO =securityService.appleLogin(appleInfo);
+        return ResponseEntity.ok(tokenDTO);
+    }
+    @PostMapping("/api/login/kakao")
+    @Operation(summary = "Kakao Login")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(description ="{user:testuser,userId:sdjahkfhkjdhsjafhksd,phonenumber:010-1234-1234,email:email@email.com}")
+    public ResponseEntity<UserResponseDto.TokenInfo> getKToken(@RequestBody KakaoUserDto kakaoUserDto) throws Exception{
+        User kInfo = oAuth2Service.getKInfo(kakaoUserDto);
+        UserResponseDto.TokenInfo tokenDTO =securityService.kakaoLogin(kInfo);
+        return ResponseEntity.ok(tokenDTO);
+    }
+
     @PostMapping(value = "/api/auth/token/kakao")
     @Operation(summary = "Get OAuth Token with Kakao Token")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved the OAuth token", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.TokenInfo.class)))
@@ -52,7 +71,7 @@ public class AuthController {
     @GetMapping(value = "/api/auth/token/kakao")
     public JSONObject oauthKakao(@RequestParam(value = "code", required = false) String code) throws Exception {
         log.warn("인가코드 = {}",code);
-        return oAuth2Service.getKakaoAccessToken("http://localhost:8080/api/auth/token/kakao", code);
+        return oAuth2Service.getKakaoAccessToken("https://www.clutch.p-e.kr/api/auth/token/kakao", code);
     }
 
 

@@ -31,6 +31,32 @@ public class SecurityService {
         return tokenDto;
     }
 
+    @Transactional
+    public UserResponseDto.TokenInfo appleLogin(User appleInfo) {
+        User user = userRepository.findByEmail(appleInfo.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException(UsernameNotFoundException.class.getName()));
+        UserResponseDto.TokenInfo tokenDto = jwtProvider.generateAppleToken(appleInfo);
+        //String refreshToken = tokenDto.getRefreshToken();
+
+
+
+        log.error(user.getName()+" 로그인!");
+        return tokenDto;
+    }
+
+    @Transactional
+    public UserResponseDto.TokenInfo kakaoLogin(User kakoInfo) {
+        User user = userRepository.findByEmail(kakoInfo.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException(UsernameNotFoundException.class.getName()));
+        UserResponseDto.TokenInfo tokenDto = jwtProvider.generateKakaoToken(kakoInfo);
+        //String refreshToken = tokenDto.getRefreshToken();
+
+
+
+        log.error(user.getName()+" 로그인!");
+        return tokenDto;
+    }
+
 
 
 

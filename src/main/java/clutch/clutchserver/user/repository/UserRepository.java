@@ -1,6 +1,7 @@
 package clutch.clutchserver.user.repository;
 
 
+import clutch.clutchserver.global.common.enums.AuthProvider;
 import clutch.clutchserver.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
