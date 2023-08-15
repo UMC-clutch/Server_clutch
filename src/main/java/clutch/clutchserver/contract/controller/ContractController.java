@@ -69,12 +69,10 @@ public class ContractController {
                 throw new ResponseStatusException(HttpStatus.CONFLICT, "계약이 이미 존재합니다.");
             } else {
                 // ContractService를 사용하여 Contract 데이터 저장
-                contractService.saveContract(requestDto, id, user,imageUrls);
+                return contractService.saveContract(requestDto, id, user,imageUrls);
                 // 이미지 URL들을 contractEntity에 추
                 //contractRepository.save(contractEntity);
             }
-
-            return ResponseEntity.ok("Contract data and images saved successfully!");
         } catch (IOException e) {
             ApiResponse apiResponse = ApiResponse.builder()
                     .check(true)
