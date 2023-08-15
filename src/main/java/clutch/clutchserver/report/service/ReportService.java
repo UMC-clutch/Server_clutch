@@ -129,7 +129,7 @@ public class ReportService {
 
         if (findContract == null) {
             ApiResponse apiResponse = ApiResponse.builder()
-                    .check(false)
+                    .check(true)
                     .information(null)
                     .build();
             return ResponseEntity.ok(apiResponse);
@@ -172,7 +172,7 @@ public class ReportService {
         Contract findContract = contractRepository.findByUserId(findUser.getId());
         if (findContract == null) {
             ApiResponse apiResponse = ApiResponse.builder()
-                    .check(false)
+                    .check(true)
                     .information(null)
                     .build();
             return ResponseEntity.ok(apiResponse);
