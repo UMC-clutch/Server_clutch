@@ -2,6 +2,8 @@ package clutch.clutchserver.global.oauth.service;
 
 import clutch.clutchserver.global.common.enums.AuthProvider;
 import clutch.clutchserver.global.common.enums.Role;
+import clutch.clutchserver.global.dto.AppleUserDto;
+import clutch.clutchserver.global.dto.KakaoUserDto;
 import clutch.clutchserver.user.entity.User;
 import clutch.clutchserver.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,6 +31,62 @@ public class Oauth2Service {
     private static final OkHttpClient client = new OkHttpClient();
     private static final String KAKAO_ID = "6368aa03461180e8130dac05a9218a4c";
 
+
+    public User getAppleInfo(AppleUserDto appleUserDto) throws IOException, ParseException {
+
+        String email = appleUserDto.getEmail();
+
+
+        // 이미 존재하는 이메일인지 확인
+        Optional<User> existingUser = userRepository.findByEmail(email);
+        System.out.println(existingUser);
+        // 만약 이미 존재하는 사용자인 경우, 해당 사용자 객체를 반환
+        if (existingUser.isPresent()) {
+            return existingUser.get();
+        }
+
+        // User 생성
+        User appleUser = User.builder()
+                .oauth2Id(appleUserDto.getOauthId())
+                .email(appleUserDto.getEmail())
+                .phoneNumber(appleUserDto.getPhoneNumber())
+                .name(appleUserDto.getName())
+                .authProvider(AuthProvider.APPLE)
+                .role(Role.ROLE_USER)
+                .build();
+
+//        // UserRepository를 사용하여 User 저장
+        userRepository.save(appleUser);
+        return appleUser;
+    }
+
+    public User getKInfo(KakaoUserDto kakaoUserDto) throws IOException, ParseException {
+
+        String email = kakaoUserDto.getEmail();
+
+
+        // 이미 존재하는 이메일인지 확인
+        Optional<User> existingUser = userRepository.findByEmail(email);
+        System.out.println(existingUser);
+        // 만약 이미 존재하는 사용자인 경우, 해당 사용자 객체를 반환
+        if (existingUser.isPresent()) {
+            return existingUser.get();
+        }
+
+        // User 생성
+        User kakaoUser = User.builder()
+                .oauth2Id(kakaoUserDto.getOauthId())
+                .email(kakaoUserDto.getEmail())
+                .phoneNumber(kakaoUserDto.getPhoneNumber())
+                .name(kakaoUserDto.getName())
+                .authProvider(AuthProvider.KAKAO)
+                .role(Role.ROLE_USER)
+                .build();
+
+//        // UserRepository를 사용하여 User 저장
+        userRepository.save(kakaoUser);
+        return kakaoUser;
+    }
 
 
 
