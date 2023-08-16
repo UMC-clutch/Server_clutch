@@ -24,6 +24,7 @@ public class User extends BaseDateEntity {
 
     private String name;
 
+    @Column(name = "oauth2_id", length = 1000)
     private String oauth2Id;
 
     @Enumerated(EnumType.STRING)

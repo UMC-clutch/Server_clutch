@@ -16,8 +16,12 @@ public class Token {
     private Long id;
 
     private String grantType;
+
+    @Column(length = 1000)
     private String accessToken;
     private Long accessTokenExpirationTime;
+
+    @Column(length = 1000)
     private String refreshToken;
     private Long refreshTokenExpirationTime;
 
