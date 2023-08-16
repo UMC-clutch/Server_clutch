@@ -35,18 +35,26 @@ public class AuthController {
     @PostMapping("/api/login/apple")
     @Operation(summary = "Apple Login")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description ="{user:testuser,userId:sdjahkfhkjdhsjafhksd,phonenumber:010-1234-1234,email:email@email.com}")
-    public ResponseEntity<UserResponseDto.TokenInfo> getAppleToken(@RequestBody AppleUserDto appleUserDto) throws Exception{
+    public ResponseEntity<clutch.clutchserver.global.payload.ApiResponse> getAppleToken(@RequestBody AppleUserDto appleUserDto) throws Exception{
         User appleInfo = oAuth2Service.getAppleInfo(appleUserDto);
         UserResponseDto.TokenInfo tokenDTO =securityService.appleLogin(appleInfo);
-        return ResponseEntity.ok(tokenDTO);
+        clutch.clutchserver.global.payload.ApiResponse apiResponse = clutch.clutchserver.global.payload.ApiResponse.builder()
+                .check(true)
+                .information(tokenDTO)
+                .build();
+        return ResponseEntity.ok(apiResponse);
     }
     @PostMapping("/api/login/kakao")
     @Operation(summary = "Kakao Login")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description ="{user:testuser,userId:sdjahkfhkjdhsjafhksd,phonenumber:010-1234-1234,email:email@email.com}")
-    public ResponseEntity<UserResponseDto.TokenInfo> getKToken(@RequestBody KakaoUserDto kakaoUserDto) throws Exception{
+    public ResponseEntity<clutch.clutchserver.global.payload.ApiResponse> getKToken(@RequestBody KakaoUserDto kakaoUserDto) throws Exception{
         User kInfo = oAuth2Service.getKInfo(kakaoUserDto);
         UserResponseDto.TokenInfo tokenDTO =securityService.kakaoLogin(kInfo);
-        return ResponseEntity.ok(tokenDTO);
+        clutch.clutchserver.global.payload.ApiResponse apiResponse = clutch.clutchserver.global.payload.ApiResponse.builder()
+                .check(true)
+                .information(tokenDTO)
+                .build();
+        return ResponseEntity.ok(apiResponse);
     }
 
     @PostMapping(value = "/api/auth/token/kakao")
