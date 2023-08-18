@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -181,9 +182,14 @@ public class ReportService {
         // 계약id로 신고 내역 찾기
         Report findReport = reportRepository.findByContractId(findContract.getId());
 
+        // 이미지 찾기
+        List<Image> findImages = imageRepository.findAllByUser(findUser);
+
         // report와 연관된 contract 삭제
         contractRepository.delete(findContract);
         reportRepository.delete(findReport);
+        imageRepository.deleteAll(findImages);
+
         ApiResponse apiResponse = ApiResponse.builder()
                 .check(true)
                 .information("contract deleted")
