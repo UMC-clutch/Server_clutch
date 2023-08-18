@@ -14,9 +14,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,18 +37,44 @@ public class AuthController {
     @PostMapping("/api/login/apple")
     @Operation(summary = "Apple Login")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description ="{user:testuser,userId:sdjahkfhkjdhsjafhksd,phonenumber:010-1234-1234,email:email@email.com}")
-    public ResponseEntity<UserResponseDto.TokenInfo> getAppleToken(@RequestBody AppleUserDto appleUserDto) throws Exception{
-        User appleInfo = oAuth2Service.getAppleInfo(appleUserDto);
-        UserResponseDto.TokenInfo tokenDTO =securityService.appleLogin(appleInfo);
-        return ResponseEntity.ok(tokenDTO);
+    public ResponseEntity<clutch.clutchserver.global.payload.ApiResponse> getAppleToken(@Valid @RequestBody AppleUserDto appleUserDto) throws Exception{
+        try {
+            User appleInfo = oAuth2Service.getAppleInfo(appleUserDto);
+            UserResponseDto.TokenInfo tokenDTO = securityService.appleLogin(appleInfo);
+            clutch.clutchserver.global.payload.ApiResponse apiResponse = clutch.clutchserver.global.payload.ApiResponse.builder()
+                    .check(true)
+                    .information(tokenDTO)
+                    .build();
+            return ResponseEntity.ok(apiResponse);
+        } catch (Exception e) {
+            // 예외 상황에 대한 처리
+            clutch.clutchserver.global.payload.ApiResponse errorResponse = clutch.clutchserver.global.payload.ApiResponse.builder()
+                    .check(false)
+                    .information(e.getMessage())
+                    .build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
     @PostMapping("/api/login/kakao")
     @Operation(summary = "Kakao Login")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description ="{user:testuser,userId:sdjahkfhkjdhsjafhksd,phonenumber:010-1234-1234,email:email@email.com}")
-    public ResponseEntity<UserResponseDto.TokenInfo> getKToken(@RequestBody KakaoUserDto kakaoUserDto) throws Exception{
-        User kInfo = oAuth2Service.getKInfo(kakaoUserDto);
-        UserResponseDto.TokenInfo tokenDTO =securityService.kakaoLogin(kInfo);
-        return ResponseEntity.ok(tokenDTO);
+    public ResponseEntity<clutch.clutchserver.global.payload.ApiResponse> getKToken(@Valid @RequestBody KakaoUserDto kakaoUserDto) throws Exception{
+        try {
+            User kInfo = oAuth2Service.getKInfo(kakaoUserDto);
+            UserResponseDto.TokenInfo tokenDTO = securityService.kakaoLogin(kInfo);
+            clutch.clutchserver.global.payload.ApiResponse apiResponse = clutch.clutchserver.global.payload.ApiResponse.builder()
+                    .check(true)
+                    .information(tokenDTO)
+                    .build();
+            return ResponseEntity.ok(apiResponse);
+        } catch (Exception e) {
+            // 예외 상황에 대한 처리
+            clutch.clutchserver.global.payload.ApiResponse errorResponse = clutch.clutchserver.global.payload.ApiResponse.builder()
+                    .check(false)
+                    .information(e.getMessage())
+                    .build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
 
     @PostMapping(value = "/api/auth/token/kakao")
