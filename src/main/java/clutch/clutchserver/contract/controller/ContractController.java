@@ -1,21 +1,23 @@
 package clutch.clutchserver.contract.controller;
 
 
+import clutch.clutchserver.calculate.dto.CalculateResponseDto;
 import clutch.clutchserver.contract.S3.S3Service;
 import clutch.clutchserver.contract.dto.ContractRequestDto;
 import clutch.clutchserver.contract.entity.Contract;
 import clutch.clutchserver.contract.repository.ContractRepository;
 import clutch.clutchserver.contract.service.ContractService;
 import clutch.clutchserver.global.payload.ApiResponse;
-import clutch.clutchserver.image.entity.Image;
 import clutch.clutchserver.report.dto.ReportResponseDto;
 import clutch.clutchserver.user.entity.User;
 import clutch.clutchserver.user.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +28,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -44,6 +45,7 @@ public class ContractController {
     @Operation(description="계약 데이터와 이미지를 함께 업로드합니다. 데이터는 하나의 FormData로 전송되며 이미지를 제외한 계약 데이터는 JSON 객체로 바꿔서 전달해주세요.")
     @PostMapping(value="/contract/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @SecurityRequirement(name = "access-token")
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successful Operation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReportResponseDto.class)))
     public ResponseEntity<?> uploadFile(@PathVariable Long id, @RequestPart("requestDto") ContractRequestDto requestDto,
                                         @RequestPart("files") MultipartFile[] files) {
         try {

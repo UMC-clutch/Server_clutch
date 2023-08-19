@@ -9,8 +9,10 @@ import clutch.clutchserver.user.repository.UserRepository;
 import clutch.clutchserver.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -68,7 +70,11 @@ public class UserController {
     @PostMapping("/v1/phone-number")
     @SecurityRequirement(name="access-token")
     @Operation(summary = "전화번호 추가", description = "유저의 전화번호를 저장합니다")
-    @ApiResponse(responseCode = "200", description = "Successful Operation")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful Operation",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PhoneNumberRequestDto.class)))
+    })
     public ResponseEntity<Map<String, String>> addPhoneNumber(@RequestBody PhoneNumberRequestDto request) {
         // 요청에서 전화번호를 가져옵니다.
         String phoneNumber = request.getPhonenumber();
