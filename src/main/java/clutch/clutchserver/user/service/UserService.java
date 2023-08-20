@@ -62,7 +62,7 @@ public class UserService {
 
     // 유저 탈퇴
     @Transactional
-    public void userDelete(String useremail, Reason reason) {
+    public ResponseEntity<?> userDelete(String useremail, Reason reason) {
 
         // user 삭제
         Optional<User> user = userRepository.findByEmail(useremail);
@@ -95,6 +95,13 @@ public class UserService {
         Withdrawal withdrawal = new Withdrawal();
         withdrawal.setReason(reason);
         withdrawalRepository.save(withdrawal);
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(user.get())
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     @Transactional
