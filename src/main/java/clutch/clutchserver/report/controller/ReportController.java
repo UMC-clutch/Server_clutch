@@ -36,7 +36,7 @@ public class ReportController {
     @ApiResponses(
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",
                     description = "성공",
-                    content = @Content(schema = @Schema(implementation = ReportResponseDto.class))
+                    content = @Content(schema = @Schema(implementation = BuildingResponseDto.class))
             )
     )
     @PostMapping(value = "/v1/report/building")

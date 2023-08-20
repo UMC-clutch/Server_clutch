@@ -2,9 +2,15 @@ package clutch.clutchserver.user.service;
 
 import clutch.clutchserver.calculate.entity.Calculate;
 import clutch.clutchserver.calculate.repository.CalculateRepository;
+import clutch.clutchserver.contract.entity.Contract;
+import clutch.clutchserver.contract.repository.ContractRepository;
 import clutch.clutchserver.global.DefaultAssert;
 import clutch.clutchserver.global.common.enums.Reason;
 import clutch.clutchserver.global.payload.ApiResponse;
+import clutch.clutchserver.image.entity.Image;
+import clutch.clutchserver.image.repository.ImageRepository;
+import clutch.clutchserver.report.entity.Report;
+import clutch.clutchserver.report.repository.ReportRepository;
 import clutch.clutchserver.token.entity.Token;
 import clutch.clutchserver.token.repository.TokenRepository;
 import clutch.clutchserver.user.dto.FindUserResponseDto;
@@ -29,6 +35,9 @@ public class UserService {
     private final WithdrawalRepository withdrawalRepository;
     private final TokenRepository tokenRepository;
     private final CalculateRepository calculateRepository;
+    private final ImageRepository imageRepository;
+    private final ContractRepository contractRepository;
+    private final ReportRepository reportRepository;
 
     //유저 조회 (조회 기준 - 유저 email)
     public ResponseEntity<?> findUser(String useremail) {
@@ -53,7 +62,7 @@ public class UserService {
 
     // 유저 탈퇴
     @Transactional
-    public void userDelete(String useremail, Reason reason) {
+    public ResponseEntity<?> userDelete(String useremail, Reason reason) {
 
         // user 삭제
         Optional<User> user = userRepository.findByEmail(useremail);
@@ -69,10 +78,30 @@ public class UserService {
         List<Calculate> calculateList = calculateRepository.findAllByUser(user.get());
         calculateRepository.deleteAll(calculateList);
 
+
+        // user 연관된 계약, 신고 삭제
+        Optional<Contract> contract = Optional.ofNullable(contractRepository.findByUserId(user.get().getId()));
+        if (contract.isPresent()) {
+            contractRepository.delete(contract.get());
+            Optional<Report> report = Optional.ofNullable(reportRepository.findByContractId(contract.get().getId()));
+            report.ifPresent(reportRepository::delete);
+
+            // user 연관된 이미지 삭제
+            List<Image> images = imageRepository.findAllByUser(user.get());
+            imageRepository.deleteAll(images);
+        }
+
         // 탈퇴 사유 등록
         Withdrawal withdrawal = new Withdrawal();
         withdrawal.setReason(reason);
         withdrawalRepository.save(withdrawal);
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .check(true)
+                .information(user.get())
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     @Transactional
