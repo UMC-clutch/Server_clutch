@@ -39,7 +39,7 @@ public class FindCalculateResponseDto {
     @Schema(description="위험여부",example= "true")
     private Boolean isDangerous;
 
-    @Schema(description = "계산시간", example = "2023-08-22T18:38:24.578412")
+    @Schema(description = "계산시간", example = "2023-08-22")
     private String createdAt;
 
     @Builder
