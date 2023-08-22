@@ -95,6 +95,7 @@ public class ReportService {
             building.setAddress(buildingRequestDto.getAddress());
             building.setDong(buildingRequestDto.getDong());
             building.setHo(buildingRequestDto.getHo());
+            building.setCollateralDate(buildingRequestDto.getCollateralDate());
 
             building.setPrice(buildingService.getPrice(building)); // 시세 가져와서 저장.
 
