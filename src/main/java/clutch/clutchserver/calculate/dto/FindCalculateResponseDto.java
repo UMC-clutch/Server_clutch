@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 
 @Data
 public class FindCalculateResponseDto {
@@ -39,8 +40,11 @@ public class FindCalculateResponseDto {
     @Schema(description="위험여부",example= "true")
     private Boolean isDangerous;
 
+    @Schema(description = "계산시간", example = "2023-08-22T18:38:24.578412")
+    private LocalDateTime createdAt;
+
     @Builder
-    public FindCalculateResponseDto(Long id, Long buildingId, String buildingName, String address, String dong, String ho, BigInteger price, BigInteger collateralMoney, BigInteger deposit, Boolean isDangerous) {
+    public FindCalculateResponseDto(Long id, Long buildingId, String buildingName, String address, String dong, String ho, BigInteger price, BigInteger collateralMoney, BigInteger deposit, Boolean isDangerous, LocalDateTime createdAt) {
         this.id = id;
         this.buildingId = buildingId;
         this.buildingName = buildingName;
@@ -51,5 +55,6 @@ public class FindCalculateResponseDto {
         this.collateralMoney = collateralMoney;
         this.deposit = deposit;
         this.isDangerous = isDangerous;
+        this.createdAt = createdAt;
     }
 }

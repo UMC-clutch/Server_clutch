@@ -92,6 +92,7 @@ public class CalculateService {
                     .collateralMoney(building.getCollateralMoney())
                     .deposit(calculate.getDeposit())
                     .isDangerous(calculate.isHasDanger())
+                    .createdAt(calculate.getCreatedAt())
                     .build();
         }).toList();
 
@@ -125,6 +126,7 @@ public class CalculateService {
                 .collateralMoney(building.getCollateralMoney())
                 .deposit(calculate.getDeposit())
                 .isDangerous(calculate.isHasDanger())
+                .createdAt(calculate.getCreatedAt())
                 .build();
 
         ApiResponse apiResponse = ApiResponse.builder()
