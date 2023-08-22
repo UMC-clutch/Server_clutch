@@ -16,6 +16,7 @@ import clutch.clutchserver.user.entity.User;
 import clutch.clutchserver.user.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -81,6 +82,8 @@ public class CalculateService {
         List<FindCalculateResponseDto> calculationResList = calculateList.stream().map(calculate -> {
             Building building = calculate.getBuilding();
 
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
             return FindCalculateResponseDto.builder()
                     .id(calculate.getId())
                     .buildingId(building.getBuildingId())
@@ -92,6 +95,7 @@ public class CalculateService {
                     .collateralMoney(building.getCollateralMoney())
                     .deposit(calculate.getDeposit())
                     .isDangerous(calculate.isHasDanger())
+                    .createdAt(calculate.getCreatedAt().format(formatter))
                     .build();
         }).toList();
 
@@ -114,6 +118,8 @@ public class CalculateService {
 
         Building building = calculate.getBuilding();
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         FindCalculateResponseDto calculationRes = FindCalculateResponseDto.builder()
                 .id(calculate.getId())
                 .buildingId(building.getBuildingId())
@@ -125,6 +131,7 @@ public class CalculateService {
                 .collateralMoney(building.getCollateralMoney())
                 .deposit(calculate.getDeposit())
                 .isDangerous(calculate.isHasDanger())
+                .createdAt(calculate.getCreatedAt().format(formatter))
                 .build();
 
         ApiResponse apiResponse = ApiResponse.builder()

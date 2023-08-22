@@ -39,8 +39,11 @@ public class FindCalculateResponseDto {
     @Schema(description="위험여부",example= "true")
     private Boolean isDangerous;
 
+    @Schema(description = "계산시간", example = "2023-08-22")
+    private String createdAt;
+
     @Builder
-    public FindCalculateResponseDto(Long id, Long buildingId, String buildingName, String address, String dong, String ho, BigInteger price, BigInteger collateralMoney, BigInteger deposit, Boolean isDangerous) {
+    public FindCalculateResponseDto(Long id, Long buildingId, String buildingName, String address, String dong, String ho, BigInteger price, BigInteger collateralMoney, BigInteger deposit, Boolean isDangerous, String createdAt) {
         this.id = id;
         this.buildingId = buildingId;
         this.buildingName = buildingName;
@@ -51,5 +54,6 @@ public class FindCalculateResponseDto {
         this.collateralMoney = collateralMoney;
         this.deposit = deposit;
         this.isDangerous = isDangerous;
+        this.createdAt = createdAt;
     }
 }
