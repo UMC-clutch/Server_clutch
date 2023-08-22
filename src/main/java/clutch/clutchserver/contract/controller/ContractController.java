@@ -56,8 +56,6 @@ public class ContractController {
             User user = user1.get();
             System.out.println(requestDto.getHasLived());
 
-
-
             // 파일 업로드 로직
             List<String> imageUrls = new ArrayList<>();
             for (MultipartFile file : files) {
