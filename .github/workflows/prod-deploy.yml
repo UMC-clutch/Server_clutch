@@ -34,13 +34,6 @@ jobs:
         sudo apt-get install -y ntp
         sudo service ntp start
 
-    - name: make logback-spring.xml
-      run: |
-        cd ./src/main/resources
-        touch ./logback-spring.xml
-        echo "${{ secrets.LOGBACK_SPRING }}" > ./logback-spring.xml
-      shell: bash
-
 
     - name: make application-db.yml
       run: |
