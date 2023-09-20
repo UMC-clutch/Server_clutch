@@ -35,6 +35,11 @@ public class Oauth2Service {
     public User getAppleInfo(AppleUserDto appleUserDto) throws IOException, ParseException {
 
         String email = appleUserDto.getEmail();
+        if(email==null){
+            throw new IllegalArgumentException("Null Error");
+        }
+
+
 
 
         // 이미 존재하는 이메일인지 확인
@@ -63,15 +68,19 @@ public class Oauth2Service {
     public User getKInfo(KakaoUserDto kakaoUserDto) throws IOException, ParseException {
 
         String email = kakaoUserDto.getEmail();
-
+        if(email==null){
+            throw new IllegalArgumentException("Null error");
+        }
 
         // 이미 존재하는 이메일인지 확인
         Optional<User> existingUser = userRepository.findByEmail(email);
+
         System.out.println(existingUser);
         // 만약 이미 존재하는 사용자인 경우, 해당 사용자 객체를 반환
         if (existingUser.isPresent()) {
             return existingUser.get();
         }
+
 
         // User 생성
         User kakaoUser = User.builder()
@@ -87,6 +96,8 @@ public class Oauth2Service {
         userRepository.save(kakaoUser);
         return kakaoUser;
     }
+
+
 
 
 
